@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         getSupportLoaderManager().initLoader(LOADER,null,this);
 
-        Log.v("INICIALIZADO : ","AQUI");
+        Log.v("INITIALIZE : ","HERE");
 
         //new JSONDownloader(context,jsonURLPopular,recyclerView).execute();
     }
@@ -85,7 +85,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             protected void onStartLoading() {
                 super.onStartLoading();
-                if(args == null) return;
+                if(args == null) {
+                    Log.v("ARGS: ", String.valueOf(args));
+                    forceLoad();
+                    return;
+                }
 
                 if (isNetworkAvailable(context)) {
                     Log.v("Ocorreu conexão com a ", "internet");
@@ -94,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             @Override
             public String loadInBackground() {
-                        Log.v("URL DO MAIN: ",jsonURLPopular);
+                        Log.v("URL MAIN: ",jsonURLPopular);
                 return download();
             }
         };
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 //            new JSONParser(context, jsonData, recyclerView);
 
-            Log.v("URL IMAGEM: ",imageURL);
+            Log.v("URL IMAGE: ",imageURL);
 
             parse = new JSON(data,imageURL,movies).parse();
 
