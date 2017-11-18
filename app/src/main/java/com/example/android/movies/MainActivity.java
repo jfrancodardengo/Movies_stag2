@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int LOADER=1;
 
+    private static final String QUERY_URL="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         recyclerView.setHasFixedSize(true);
 
         Log.v("URL: ",jsonURLPopular);
-
-        recyclerView.setAdapter(new FilmeAdapter(context, movies));
 
         getSupportLoaderManager().initLoader(LOADER,null,this);
 
@@ -65,15 +65,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemClicado = item.getItemId();
-        if (itemClicado==android.R.id.home){
+        int itemClick = item.getItemId();
+        if (itemClick==android.R.id.home){
             NavUtils.navigateUpFromSameTask(this);
             return true;
-        }else if (itemClicado == R.id.action_votes){
+        }else if (itemClick == R.id.action_votes){
 
+            Bundle queryBundle = new Bundle();
+            queryBundle.putString(QUERY_URL,jsonURLTopRated);
+
+            getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
+
+            Log.v("BUNDLE: ", String.valueOf(queryBundle));
 //            new JSONDownloader(context,jsonURLTopRated,recyclerView).execute();
             return true;
         }
+
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString(QUERY_URL,jsonURLPopular);
+
+        getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
+
+        Log.v("BUNDLE: ", String.valueOf(queryBundle));
+
 //        new JSONDownloader(context,jsonURLPopular,recyclerView).execute();
         return super.onOptionsItemSelected(item);
     }
@@ -126,8 +140,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             Log.v("PARSE: ", String.valueOf(parse));
 
-            if(!parse){
-//                recyclerView.setAdapter(new FilmeAdapter(context, movies));
+            if(parse){
+                recyclerView.setAdapter(new FilmeAdapter(context, movies));
+
+                Log.v("MOVIES : ", String.valueOf(movies));
+
+            //   recyclerView.setAdapter(new FilmeAdapter(context, movies));
                 Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_SHORT).show();
             }//else {
 //                Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_SHORT).show();
