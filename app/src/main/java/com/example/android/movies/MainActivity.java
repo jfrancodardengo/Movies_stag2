@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             protected void onStartLoading() {
                 super.onStartLoading();
                 if(args == null) {
+                    Log.v("ARGS: ", String.valueOf(args));
+                    forceLoad();
                     return;
                 }
 
