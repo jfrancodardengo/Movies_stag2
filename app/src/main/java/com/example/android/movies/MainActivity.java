@@ -106,14 +106,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
 
                 if (isNetworkAvailable(context)) {
-                    Log.v("Ocorreu conexão com a ", "internet");
+                    Log.v("Error with ", "internet");
                 }
             }
 
             @Override
             public String loadInBackground() {
                         Log.v("URL MAIN: ",jsonURLPopular);
-                return download();
+
+                return download(jsonURLPopular);
             }
         };
 //        String url = jsonURLPopular;
@@ -146,10 +147,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Log.v("MOVIES : ", String.valueOf(movies));
 
             //   recyclerView.setAdapter(new FilmeAdapter(context, movies));
-                Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_SHORT).show();
-            }//else {
-//                Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_SHORT).show();
-            //}
+            }else {
+                Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
+            }
             //PARSER
 //            new JSONParser(context, jsonData, recyclerView).execute();
         }
@@ -161,9 +161,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-
-    private String download() {
-        Object connection = Connector.connect(jsonURLPopular);
+    private String download(String url) {
+        Object connection = Connector.connect(url);
         if (connection.toString().startsWith("Error")) {
             return connection.toString();
         }
