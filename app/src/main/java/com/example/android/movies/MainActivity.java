@@ -51,21 +51,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
         recyclerView.setHasFixedSize(true);
 
-        Log.v("URL: ",jsonURLPopular);
-
         Bundle queryBundle = new Bundle();
         queryBundle.putString(QUERY_URL,jsonURLPopular);
 
-//        jsonUrl = queryBundle.toString();
-
         jsonUrl = queryBundle.getString(QUERY_URL);
 
-//        getSupportLoaderManager().initLoader(LOADER,null,this);
         getSupportLoaderManager().initLoader(LOADER,queryBundle,this);
-
-        Log.v("INITIALIZE : ","HERE "+jsonUrl);
-
-        //new JSONDownloader(context,jsonURLPopular,recyclerView).execute();
     }
 
     @Override
@@ -73,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getMenuInflater().inflate(R.menu.main,menu);
         return true;
     }
-//    Bundle queryBundle = new Bundle();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -90,11 +80,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
 
-            Log.v("BUNDLE: ", String.valueOf(queryBundle));
-
-            Log.v("JSON URL: ",jsonUrl);
-
-//            new JSONDownloader(context,jsonURLTopRated,recyclerView).execute();
             return true;
         }
         Bundle queryBundle = new Bundle();
@@ -104,11 +89,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
 
-        Log.v("BUNDLE: ", String.valueOf(queryBundle));
-
-//        Log.v("JSON URL: ",jsonUrl);
-
-//        new JSONDownloader(context,jsonURLPopular,recyclerView).execute();
         return super.onOptionsItemSelected(item);
     }
 
@@ -120,67 +100,38 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             protected void onStartLoading() {
                 super.onStartLoading();
                 if(args == null) {
-                    Log.v("ARGS: ", String.valueOf(args));
-                    Log.v("JSON URL: ",jsonUrl);
-//                    forceLoad();
                     return;
                 }
 
-
-//                if (isNetworkAvailable(context)) {
-//               if (netWorkdisponibilidade(context)){
-//                  if (isNetworkAvailable()){
                 if(isConnected(context)){
                     Log.v("INTERNET: ", "CONNECTED");
-                }else{Log.v("INTERNET: ", "DISCONNECTED");}
+                }else{
+                    Log.v("INTERNET: ", "DISCONNECTED");
+                }
 
                 forceLoad();
             }
 
             @Override
             public String loadInBackground() {
-                Log.v("URL MAIN: ",jsonUrl);
-//                return download(jsonUrl);
                 return download(jsonUrl);
-//                return download();
             }
         };
-//        String url = jsonURLPopular;
-//
-//        Log.v("URL DO MAIN: ",url);
-//
-//        return new JSONDownloader(context,url,recyclerView);
     }
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
-        Log.v("DATA: ",data);
         if (data.startsWith("Error")) {
             String error = data;
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
         } else {
-
-            Log.v("URL DOWNLOAD: ",data);
-
-//            new JSONParser(context, jsonData, recyclerView);
-
-            Log.v("URL IMAGE: ",imageURL);
-
             parse = new JSON(data,imageURL,movies).parse();
-
-            Log.v("PARSE: ", String.valueOf(parse));
 
             if(parse){
                 recyclerView.setAdapter(new FilmeAdapter(context, movies));
-
-                Log.v("MOVIES : ", String.valueOf(movies));
-
-            //   recyclerView.setAdapter(new FilmeAdapter(context, movies));
             }else {
                 Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
             }
-            //PARSER
-//            new JSONParser(context, jsonData, recyclerView).execute();
         }
     }
 
@@ -191,10 +142,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private String download(String url) {
-//        private String download(){
-//        Object connection = Connector.connect(jsonURLPopular);
-//        url = jsonUrl;
-//        Object connection = Connector.connect(jsonUrl);
         Object connection = Connector.connect(url);
         if (connection.toString().startsWith("Error")) {
             return connection.toString();
@@ -223,31 +170,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             e.printStackTrace();
             return "Error " + e.getMessage();
         }
-    }
-
-    boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public boolean netWorkdisponibilidade(Context cont){
-        boolean conectado = false;
-        ConnectivityManager conmag;
-        conmag = (ConnectivityManager)cont.getSystemService(Context.CONNECTIVITY_SERVICE);
-        conmag.getActiveNetworkInfo();
-        //Verifica o WIFI
-        if(conmag.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()){
-            conectado = true;
-        }
-        //Verifica o 3G
-        else if(conmag.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()){
-            conectado = true;
-        }
-        else{
-            conectado = false;
-        }
-        return conectado;
     }
 
     public static boolean isConnected(Context context) {
