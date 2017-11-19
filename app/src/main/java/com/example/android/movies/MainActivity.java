@@ -3,7 +3,6 @@ package com.example.android.movies;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.ResultReceiver;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getSupportLoaderManager().initLoader(LOADER,null,this);
 //        getSupportLoaderManager().initLoader(LOADER,queryBundle,this);
 
-        Log.v("INITIALIZE : ","HERE"+jsonUrl);
+        Log.v("INITIALIZE : ","HERE "+jsonUrl);
 
         //new JSONDownloader(context,jsonURLPopular,recyclerView).execute();
     }
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         Log.v("BUNDLE: ", String.valueOf(queryBundle));
 
-        Log.v("JSON URL: ",jsonUrl);
+//        Log.v("JSON URL: ",jsonUrl);
 
 //        new JSONDownloader(context,jsonURLPopular,recyclerView).execute();
         return super.onOptionsItemSelected(item);
@@ -122,15 +121,25 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 super.onStartLoading();
                 if(args == null) {
                     Log.v("ARGS: ", String.valueOf(args));
-//                    Log.v("JSON URL: ",jsonUrl);
-                    forceLoad();
+                    Log.v("JSON URL: ",jsonUrl);
+//                    forceLoad();
                     return;
                 }
 
-                if (isNetworkAvailable(context)) {
-                    Log.v("Error with ", "internet");
-                }
+
+//                if (isNetworkAvailable(context)) {
+//               if (netWorkdisponibilidade(context)){
+//                  if (isNetworkAvailable()){
+                if(isConnected(context)){
+//                        Log.v("Error with ", "internet");
+                    Toast.makeText(getApplicationContext(), "Conected", Toast.LENGTH_SHORT).show();
+//                    Log.v("Error with ", "internet");
+//                    return;
+                }else{Toast.makeText(getApplicationContext(), "Disconnected", Toast.LENGTH_SHORT).show();}
+
+                forceLoad();
             }
+
             @Override
             public String loadInBackground() {
                 Log.v("URL MAIN: ",jsonUrl);
@@ -224,4 +233,34 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    public boolean netWorkdisponibilidade(Context cont){
+        boolean conectado = false;
+        ConnectivityManager conmag;
+        conmag = (ConnectivityManager)cont.getSystemService(Context.CONNECTIVITY_SERVICE);
+        conmag.getActiveNetworkInfo();
+        //Verifica o WIFI
+        if(conmag.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()){
+            conectado = true;
+        }
+        //Verifica o 3G
+        else if(conmag.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()){
+            conectado = true;
+        }
+        else{
+            conectado = false;
+        }
+        return conectado;
+    }
+
+    public static boolean isConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        if ((netInfo != null) && (netInfo.isConnectedOrConnecting()) && (netInfo.isAvailable())) {
+            return true;
+        }
+        return false;
+    }
+
 }
