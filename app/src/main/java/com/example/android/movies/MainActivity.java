@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         jsonUrl = queryBundle.getString(QUERY_URL);
 
-        getSupportLoaderManager().initLoader(LOADER,null,this);
-//        getSupportLoaderManager().initLoader(LOADER,queryBundle,this);
+//        getSupportLoaderManager().initLoader(LOADER,null,this);
+        getSupportLoaderManager().initLoader(LOADER,queryBundle,this);
 
         Log.v("INITIALIZE : ","HERE "+jsonUrl);
 
@@ -131,11 +131,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //               if (netWorkdisponibilidade(context)){
 //                  if (isNetworkAvailable()){
                 if(isConnected(context)){
-//                        Log.v("Error with ", "internet");
-                    Toast.makeText(getApplicationContext(), "Conected", Toast.LENGTH_SHORT).show();
-//                    Log.v("Error with ", "internet");
-//                    return;
-                }else{Toast.makeText(getApplicationContext(), "Disconnected", Toast.LENGTH_SHORT).show();}
+                    Log.v("INTERNET: ", "CONNECTED");
+                }else{Log.v("INTERNET: ", "DISCONNECTED");}
 
                 forceLoad();
             }
