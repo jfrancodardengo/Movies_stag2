@@ -3,6 +3,7 @@ package com.example.android.movies;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.ResultReceiver;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
@@ -56,10 +57,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Bundle queryBundle = new Bundle();
         queryBundle.putString(QUERY_URL,jsonURLPopular);
 
+//        jsonUrl = queryBundle.toString();
+
+        jsonUrl = queryBundle.getString(QUERY_URL);
+
         getSupportLoaderManager().initLoader(LOADER,null,this);
 //        getSupportLoaderManager().initLoader(LOADER,queryBundle,this);
 
-        Log.v("INITIALIZE : ","HERE");
+        Log.v("INITIALIZE : ","HERE"+jsonUrl);
 
         //new JSONDownloader(context,jsonURLPopular,recyclerView).execute();
     }
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             Bundle queryBundle = new Bundle();
             queryBundle.putString(QUERY_URL,jsonURLTopRated);
 
-            jsonUrl = queryBundle.toString();
+            jsonUrl = queryBundle.getString(QUERY_URL);
 
             getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
 
@@ -96,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Bundle queryBundle = new Bundle();
         queryBundle.putString(QUERY_URL,jsonURLPopular);
 
-        jsonUrl = queryBundle.toString();
+        jsonUrl = queryBundle.getString(QUERY_URL);
 
         getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
 
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 super.onStartLoading();
                 if(args == null) {
                     Log.v("ARGS: ", String.valueOf(args));
+//                    Log.v("JSON URL: ",jsonUrl);
                     forceLoad();
                     return;
                 }
@@ -127,9 +133,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
             @Override
             public String loadInBackground() {
-//                Log.v("URL MAIN: ",jsonUrl);
+                Log.v("URL MAIN: ",jsonUrl);
 //                return download(jsonUrl);
                 return download(jsonUrl);
+//                return download();
             }
         };
 //        String url = jsonURLPopular;
@@ -141,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
+        Log.v("DATA: ",data);
         if (data.startsWith("Error")) {
             String error = data;
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
@@ -177,8 +185,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private String download(String url) {
+//        private String download(){
 //        Object connection = Connector.connect(jsonURLPopular);
-        url = jsonUrl;
+//        url = jsonUrl;
 //        Object connection = Connector.connect(jsonUrl);
         Object connection = Connector.connect(url);
         if (connection.toString().startsWith("Error")) {
