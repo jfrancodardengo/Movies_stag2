@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final String QUERY_URL="";
 
+    private String jsonUrl;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +53,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         Log.v("URL: ",jsonURLPopular);
 
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString(QUERY_URL,jsonURLPopular);
+
         getSupportLoaderManager().initLoader(LOADER,null,this);
+//        getSupportLoaderManager().initLoader(LOADER,queryBundle,this);
 
         Log.v("INITIALIZE : ","HERE");
 
@@ -62,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getMenuInflater().inflate(R.menu.main,menu);
         return true;
     }
+//    Bundle queryBundle = new Bundle();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -74,19 +82,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             Bundle queryBundle = new Bundle();
             queryBundle.putString(QUERY_URL,jsonURLTopRated);
 
+            jsonUrl = queryBundle.toString();
+
             getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
 
             Log.v("BUNDLE: ", String.valueOf(queryBundle));
+
+            Log.v("JSON URL: ",jsonUrl);
+
 //            new JSONDownloader(context,jsonURLTopRated,recyclerView).execute();
             return true;
         }
-
         Bundle queryBundle = new Bundle();
         queryBundle.putString(QUERY_URL,jsonURLPopular);
+
+        jsonUrl = queryBundle.toString();
 
         getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
 
         Log.v("BUNDLE: ", String.valueOf(queryBundle));
+
+        Log.v("JSON URL: ",jsonUrl);
 
 //        new JSONDownloader(context,jsonURLPopular,recyclerView).execute();
         return super.onOptionsItemSelected(item);
@@ -109,12 +125,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     Log.v("Error with ", "internet");
                 }
             }
-
             @Override
             public String loadInBackground() {
-                        Log.v("URL MAIN: ",jsonURLPopular);
-
-                return download(jsonURLPopular);
+//                Log.v("URL MAIN: ",jsonUrl);
+//                return download(jsonUrl);
+                return download(jsonUrl);
             }
         };
 //        String url = jsonURLPopular;
@@ -162,6 +177,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private String download(String url) {
+//        Object connection = Connector.connect(jsonURLPopular);
+        url = jsonUrl;
+//        Object connection = Connector.connect(jsonUrl);
         Object connection = Connector.connect(url);
         if (connection.toString().startsWith("Error")) {
             return connection.toString();
