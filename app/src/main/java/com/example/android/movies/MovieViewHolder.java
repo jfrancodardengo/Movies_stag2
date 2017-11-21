@@ -8,11 +8,11 @@ import android.widget.ImageView;
  * Created by Guto on 15/10/2017.
  */
 
-public class FilmeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     ImageView thumbnailFilm;
     ItemClickListener itemClickListener;
 
-    public FilmeViewHolder(View itemView){
+    public MovieViewHolder(View itemView){
         super(itemView);
 
         thumbnailFilm = (ImageView)itemView.findViewById(R.id.thumbnail_film);

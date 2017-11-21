@@ -17,13 +17,13 @@ import java.util.Date;
  * Created by Guto on 15/10/2017.
  */
 
-public class FilmeAdapter extends RecyclerView.Adapter<FilmeViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     private Context context;
     private ArrayList<Movie> movies;
     private float scale;
     private int width,height;
 
-    public FilmeAdapter(Context context, ArrayList<Movie> movies) {
+    public MovieAdapter(Context context, ArrayList<Movie> movies) {
         this.context = context;
         this.movies = movies;
         //In this part it's used for adjustment the image the same device size
@@ -33,13 +33,13 @@ public class FilmeAdapter extends RecyclerView.Adapter<FilmeViewHolder> {
     }
 
     @Override
-    public FilmeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.model_film,parent,false);
-        return new FilmeViewHolder(view);
+        return new MovieViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(FilmeViewHolder holder, int position) {
+    public void onBindViewHolder(MovieViewHolder holder, int position) {
         final Movie movie = movies.get(position);
 
 //        holder.thumbnailFilm.getLayoutParams().height = height;

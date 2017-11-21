@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             parse = new JSON(data,imageURL,movies).parse();
 
             if(parse){
-                recyclerView.setAdapter(new FilmeAdapter(context, movies));
+                recyclerView.setAdapter(new MovieAdapter(context, movies));
             }else {
                 Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
             }

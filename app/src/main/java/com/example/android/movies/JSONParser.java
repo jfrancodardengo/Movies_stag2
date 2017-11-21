@@ -41,7 +41,7 @@ public class JSONParser  extends AsyncTask<Void,Void,Boolean>{
         if(isParsed)
         {
             //BIND
-            recyclerView.setAdapter(new FilmeAdapter(context, movies));
+            recyclerView.setAdapter(new MovieAdapter(context, movies));
         }else
         {
             Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_SHORT).show();
