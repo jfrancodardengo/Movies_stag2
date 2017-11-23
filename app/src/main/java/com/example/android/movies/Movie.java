@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 
 public class Movie implements Parcelable{
+    private int mMovieId;
     private double mVoteAverage;
     private String mOriginalTitle;
     private String mImage;
@@ -26,7 +27,8 @@ public class Movie implements Parcelable{
      * @param dataLancamento é a data em que foi lançado o filme
      */
 
-    public Movie(double avaliacaoVoto, String tituloOriginal, String imagem, String sinopse, String dataLancamento) {
+    public Movie(int movieId,double avaliacaoVoto, String tituloOriginal, String imagem, String sinopse, String dataLancamento) {
+        this.mMovieId = movieId;
         this.mVoteAverage = avaliacaoVoto;
         this.mOriginalTitle = tituloOriginal;
         this.mImage = imagem;
@@ -106,6 +108,14 @@ public class Movie implements Parcelable{
 
     public void setRealeaseDate(String mRealeaseDate) {
         this.mRealeaseDate = mRealeaseDate;
+    }
+
+    public int getMovieId() {
+        return mMovieId;
+    }
+
+    public void setMovieId(int mMovieId) {
+        this.mMovieId = mMovieId;
     }
 
     @Override
