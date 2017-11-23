@@ -27,19 +27,27 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
     Context context = MainActivity.this;
     RecyclerView recyclerView;
+
+    public static final String URL_GENERIC= "https://api.themoviedb.org/3/movie/";
+
     String apiKey = com.example.android.movies.BuildConfig.MOVIES_KEY;
-    String jsonURLPopular="https://api.themoviedb.org/3/movie/popular?api_key="+apiKey+"&language=pt-BR";
-    String jsonURLTopRated="https://api.themoviedb.org/3/movie/top_rated?api_key="+apiKey+"&language=pt-BR";
+    String jsonURLPopular = URL_GENERIC + "/popular?api_key="+apiKey+"&language=pt-BR";
+    String jsonURLTopRated= URL_GENERIC + "/top_rated?api_key="+apiKey+"&language=pt-BR";
 
     String imageURL = "http://image.tmdb.org/t/p/w342";
     Boolean parse;
     ArrayList<Movie> movies = new ArrayList<>();
+
+    Movie movie;
 
     private static final int LOADER=1;
 
     private static final String QUERY_URL="";
 
     private String jsonUrl;
+
+//    private String mVideos = URL_GENERIC + movie.getMovieId() + "/videos?api_key="+apiKey+"&language=pt-BR";
+//    private String mReviews = URL_GENERIC + movie.getMovieId() + "/reviews?api_key="+apiKey+"&language=pt-BR";
 
 
     @Override

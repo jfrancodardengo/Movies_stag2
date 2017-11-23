@@ -1,15 +1,20 @@
 package com.example.android.movies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Guto on 14/10/2017.
  */
 
-public class Movie {
+public class Movie implements Parcelable{
     private double mVoteAverage;
     private String mOriginalTitle;
     private String mImage;
     private String mSynopsis;
     private String mRealeaseDate;
+
+    public Movie(){}
 
     /**
      * Constrói um novo objeto {@link Movie}.
@@ -29,13 +34,39 @@ public class Movie {
         this.mRealeaseDate = dataLancamento;
     }
 
+    /* Using the `in` variable, we can retrieve the values that
+     we originally wrote into the `Parcel`.  This constructor is usually
+    private so that only the `CREATOR` field can access.*/
+    public Movie(Parcel in){
+        this.mVoteAverage = in.readDouble();
+        this.mOriginalTitle = in.readString();
+        this.mImage = in.readString();
+        this.mSynopsis = in.readString();
+        this.mRealeaseDate = in.readString();
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+
+        // This simply calls our new constructor (typically private) and
+        // passes along the unmarshalled `Parcel`, and then returns the new object!
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        // We just need to copy this and change the type to match our class.
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
     public Movie(double avaliacaoVoto, String tituloOriginal, String image) {
         this.mVoteAverage = avaliacaoVoto;
         this.mOriginalTitle = tituloOriginal;
         this.mImage = image;
     }
 
-    public Movie(){}
 
     public double getVoteAverage() {
         return mVoteAverage;
@@ -75,5 +106,23 @@ public class Movie {
 
     public void setRealeaseDate(String mRealeaseDate) {
         this.mRealeaseDate = mRealeaseDate;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /* This is where you write the values you want to save to the `Parcel`.
+     The `Parcel` class has methods defined to help you save all of your values.
+    Note that there are only methods defined for simple values, lists, and other Parcelable objects.
+    You may need to make several classes Parcelable to send the data you want.*/
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(mVoteAverage);
+        dest.writeString(mOriginalTitle);
+        dest.writeString(mImage);
+        dest.writeString(mSynopsis);
+        dest.writeString(mRealeaseDate);
     }
 }
