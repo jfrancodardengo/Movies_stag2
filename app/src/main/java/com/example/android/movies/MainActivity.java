@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public static final String URL_GENERIC= "https://api.themoviedb.org/3/movie/";
 
-    String apiKey = com.example.android.movies.BuildConfig.MOVIES_KEY;
+    public static final String apiKey = com.example.android.movies.BuildConfig.MOVIES_KEY;
     String jsonURLPopular = URL_GENERIC + "/popular?api_key="+apiKey+"&language=pt-BR";
     String jsonURLTopRated= URL_GENERIC + "/top_rated?api_key="+apiKey+"&language=pt-BR";
 
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    private String download(String url) {
+    public String download(String url) {
         Object connection = Connector.connect(url);
         if (connection.toString().startsWith("Error")) {
             return connection.toString();

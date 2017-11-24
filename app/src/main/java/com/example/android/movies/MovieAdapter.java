@@ -50,8 +50,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                openDetailActivity(movie.getVoteAverage(), movie.getOriginalTitle(),
-                        movie.getImage(), movie.getSynopsis(), movie.getRealeaseDate());
+//                Intent i=new Intent(context,OpenDetailActivity.class);
+                Intent i=new Intent(context,DetailActivity.class);
+                i.putExtra("movie",movie);
+                context.startActivity(i);
+//                openDetailActivity(movie.getMovieId(),movie.getVoteAverage(), movie.getOriginalTitle(),
+//                        movie.getImage(), movie.getSynopsis(), movie.getRealeaseDate());
             }
         });
 
@@ -67,14 +71,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         return movies.size();
     }
 
-    private void openDetailActivity(double mVoteAverage, String mOriginalTitle, String mImage, String mSynopsis, String mRealeaseDate)
+    private void openDetailActivity(int mMovieId,double mVoteAverage, String mOriginalTitle, String mImage, String mSynopsis, String mRealeaseDate)
     {
-        Intent i=new Intent(context,DetailActivity.class);
-        i.putExtra("VOTE_KEY",mVoteAverage);
-        i.putExtra("TITLE_KEY",mOriginalTitle);
-        i.putExtra("IMAGE_KEY",mImage);
-        i.putExtra("SYNOPSIS_KEY",mSynopsis);
-        i.putExtra("RELEASE_KEY",mRealeaseDate);
+//        Intent i=new Intent(context,DetailActivity.class);
+        Intent i=new Intent(context,OpenDetailActivity.class);
+        i.putExtra("movies",movies);
+//        i.putExtra("MOVIE_KEY",mMovieId);
+//        i.putExtra("VOTE_KEY",mVoteAverage);
+//        i.putExtra("TITLE_KEY",mOriginalTitle);
+//        i.putExtra("IMAGE_KEY",mImage);
+//        i.putExtra("SYNOPSIS_KEY",mSynopsis);
+//        i.putExtra("RELEASE_KEY",mRealeaseDate);
         context.startActivity(i);
     }
 

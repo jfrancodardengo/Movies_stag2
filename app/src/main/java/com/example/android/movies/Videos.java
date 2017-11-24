@@ -16,6 +16,8 @@ public class Videos implements Parcelable {
         this.name = name;
     }
 
+    public Videos(){}
+
     public Videos(Parcel in) {
         this.key = in.readString();
         this.name = in.readString();

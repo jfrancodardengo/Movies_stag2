@@ -16,6 +16,8 @@ public class Reviews implements Parcelable {
         this.content = content;
     }
 
+    public Reviews(){}
+
     public Reviews(Parcel in) {
         this.author = in.readString();
         this.content = in.readString();
