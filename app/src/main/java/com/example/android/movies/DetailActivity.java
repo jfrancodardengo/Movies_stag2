@@ -27,11 +27,14 @@ public class DetailActivity extends AppCompatActivity{
     Movie movie = new Movie();
     TextView title, vote, release, synopsis;
     ImageView imageThumbnail;
+    int movieId;
+
 
     private ArrayList<Reviews> reviews =new ArrayList<>();
     private ArrayList<Videos> videos =new ArrayList<>();
 
 //    private String mVideos = mainActivity.URL_GENERIC + movie.getMovieId() + "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
+//    private String mVideos = mainActivity.URL_GENERIC +movieId+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
     private String mReviews = mainActivity.URL_GENERIC + movie.getMovieId() + "/reviews?api_key="+mainActivity.apiKey+"&language=pt-BR";
 
     private static final int DATA_RESULT_LOADER_VIDEOS_ID = 1;
@@ -51,10 +54,11 @@ public class DetailActivity extends AppCompatActivity{
         synopsis = (TextView)findViewById(R.id.tv_synopsis);
         imageThumbnail = (ImageView)findViewById(R.id.img_thumbnail_film);
 
-
         //obter intent
         Intent i = this.getIntent();
         movie = i.getExtras().getParcelable("movie");
+
+        movieId = movie.getMovieId();
 
         title.setText(movie.getOriginalTitle());
         vote.setText(String.valueOf(movie.getVoteAverage()));
@@ -63,15 +67,19 @@ public class DetailActivity extends AppCompatActivity{
 
         Picasso.with(DetailActivity.this).load(movie.getImage()).into(imageThumbnail);
 
-        Log.v("VEIO ATÉ ", "AQUI");
+        Log.v("MOVIE ID ", String.valueOf(movie.getMovieId()));
 
-        getSupportLoaderManager().initLoader(DATA_RESULT_LOADER_VIDEOS_ID,null,dataResultLoaderVideos);
+        Bundle queryVideos = new Bundle();
+        queryVideos.putString("url",mVideos);
+
+        getSupportLoaderManager().initLoader(DATA_RESULT_LOADER_VIDEOS_ID,queryVideos,dataResultLoaderVideos);
+//        getSupportLoaderManager().initLoader(DATA_RESULT_LOADER_VIDEOS_ID,null,dataResultLoaderVideos);
 
         Log.v("PASSOU ", "DAQUI");
 
     }
 
-    private String mVideos = mainActivity.URL_GENERIC + movie.getMovieId() + "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
+    private String mVideos = mainActivity.URL_GENERIC +movieId+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
 
     private LoaderManager.LoaderCallbacks<String> dataResultLoaderVideos = new LoaderManager.LoaderCallbacks<String>() {
         @Override
@@ -81,7 +89,6 @@ public class DetailActivity extends AppCompatActivity{
                 protected void onStartLoading() {
                     super.onStartLoading();
                     if(args == null) {
-                        Log.v("URL VIDEO: ", mVideos);
                         Log.v("ARGS DETAIL: ", String.valueOf(args));
                         return;
                     }

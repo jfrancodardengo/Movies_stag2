@@ -51,7 +51,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
             @Override
             public void onItemClick(int position) {
 //                Intent i=new Intent(context,OpenDetailActivity.class);
-                Intent i=new Intent(context,DetailActivity.class);
+                Intent i = new Intent(context,DetailActivity.class);
                 i.putExtra("movie",movie);
                 context.startActivity(i);
 //                openDetailActivity(movie.getMovieId(),movie.getVoteAverage(), movie.getOriginalTitle(),

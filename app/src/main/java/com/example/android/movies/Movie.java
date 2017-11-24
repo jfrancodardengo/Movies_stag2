@@ -40,6 +40,7 @@ public class Movie implements Parcelable{
      we originally wrote into the `Parcel`.  This constructor is usually
     private so that only the `CREATOR` field can access.*/
     public Movie(Parcel in){
+        this.mMovieId = in.readInt();
         this.mVoteAverage = in.readDouble();
         this.mOriginalTitle = in.readString();
         this.mImage = in.readString();
@@ -129,6 +130,7 @@ public class Movie implements Parcelable{
     You may need to make several classes Parcelable to send the data you want.*/
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mMovieId);
         dest.writeDouble(mVoteAverage);
         dest.writeString(mOriginalTitle);
         dest.writeString(mImage);

@@ -16,7 +16,7 @@ public class JSON {
     private ArrayList<Movie> movies =new ArrayList<>();
     private ArrayList<Reviews> reviews =new ArrayList<>();
     private ArrayList<Videos> videos =new ArrayList<>();
-    private int idMovie;
+//    private int idMovie;
 
     public JSON(String jsonData, String imageURL, ArrayList<Movie> movies) {
         this.jsonData = jsonData;
@@ -45,7 +45,7 @@ public class JSON {
 
             for (int i=0; i < jsonArray.length(); i++){
                 jsonObject = jsonArray.getJSONObject(i);
-                idMovie = jsonObject.getInt("id");
+                int idMovie = jsonObject.getInt("id");
                 Double voteAverage = jsonObject.getDouble("vote_average");
                 String title = jsonObject.getString("title");
                 String image = jsonObject.getString("poster_path");
