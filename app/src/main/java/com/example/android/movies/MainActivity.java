@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public static final String URL_GENERIC= "https://api.themoviedb.org/3/movie/";
 
     public static final String apiKey = com.example.android.movies.BuildConfig.MOVIES_KEY;
-    String jsonURLPopular = URL_GENERIC + "/popular?api_key="+apiKey+"&language=pt-BR";
-    String jsonURLTopRated= URL_GENERIC + "/top_rated?api_key="+apiKey+"&language=pt-BR";
+    String jsonURLPopular = URL_GENERIC + "popular?api_key="+apiKey+"&language=pt-BR";
+    String jsonURLTopRated= URL_GENERIC + "top_rated?api_key="+apiKey+"&language=pt-BR";
 
     String imageURL = "http://image.tmdb.org/t/p/w342";
     Boolean parse;
@@ -45,10 +45,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final String QUERY_URL="";
 
     private String jsonUrl;
-
-//    private String mVideos = URL_GENERIC + movie.getMovieId() + "/videos?api_key="+apiKey+"&language=pt-BR";
-//    private String mReviews = URL_GENERIC + movie.getMovieId() + "/reviews?api_key="+apiKey+"&language=pt-BR";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

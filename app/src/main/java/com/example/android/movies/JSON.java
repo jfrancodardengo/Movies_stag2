@@ -24,6 +24,16 @@ public class JSON {
         this.movies = movies;
     }
 
+    public JSON(String jsonData, ArrayList<Videos> videos) {
+        this.jsonData = jsonData;
+        this.videos = videos;
+    }
+
+//    public JSON(String jsonData, ArrayList<Reviews> reviews) {
+//        this.jsonData = jsonData;
+//        this.reviews = reviews;
+//    }
+
     public Boolean parse(){
         try
         {
