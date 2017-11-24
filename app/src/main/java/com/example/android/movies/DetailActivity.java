@@ -21,21 +21,23 @@ import java.util.ArrayList;
  * Created by Guto on 15/10/2017.
  */
 
+
+/*ULTIMA RESPOSTA PARA O FÓRUM
+* I checked and is there necessary to put **String mVideos** and **String mReviews** inside `onCreate()` method after reading **Movie** from the Intent.
+*
+* */
+
 public class DetailActivity extends AppCompatActivity{
     Context context = DetailActivity.this;
     MainActivity mainActivity = new MainActivity();
     Movie movie = new Movie();
     TextView title, vote, release, synopsis;
     ImageView imageThumbnail;
-    int movieId;
-
+    private String mVideos;
+    private String mReviews;
 
     private ArrayList<Reviews> reviews =new ArrayList<>();
     private ArrayList<Videos> videos =new ArrayList<>();
-
-//    private String mVideos = mainActivity.URL_GENERIC + movie.getMovieId() + "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
-//    private String mVideos = mainActivity.URL_GENERIC +movieId+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
-    private String mReviews = mainActivity.URL_GENERIC + movie.getMovieId() + "/reviews?api_key="+mainActivity.apiKey+"&language=pt-BR";
 
     private static final int DATA_RESULT_LOADER_VIDEOS_ID = 1;
     private static final int DATA_RESULT_LOADER_REVIEWS_ID = 2;
@@ -58,7 +60,8 @@ public class DetailActivity extends AppCompatActivity{
         Intent i = this.getIntent();
         movie = i.getExtras().getParcelable("movie");
 
-        movieId = movie.getMovieId();
+        mVideos = mainActivity.URL_GENERIC +movie.getMovieId()+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
+        mReviews = mainActivity.URL_GENERIC + movie.getMovieId() + "/reviews?api_key="+mainActivity.apiKey+"&language=pt-BR";
 
         title.setText(movie.getOriginalTitle());
         vote.setText(String.valueOf(movie.getVoteAverage()));
@@ -67,19 +70,17 @@ public class DetailActivity extends AppCompatActivity{
 
         Picasso.with(DetailActivity.this).load(movie.getImage()).into(imageThumbnail);
 
-        Log.v("MOVIE ID ", String.valueOf(movie.getMovieId()));
-
         Bundle queryVideos = new Bundle();
         queryVideos.putString("url",mVideos);
-
         getSupportLoaderManager().initLoader(DATA_RESULT_LOADER_VIDEOS_ID,queryVideos,dataResultLoaderVideos);
-//        getSupportLoaderManager().initLoader(DATA_RESULT_LOADER_VIDEOS_ID,null,dataResultLoaderVideos);
 
-        Log.v("PASSOU ", "DAQUI");
+        Bundle queryReviews = new Bundle();
+        queryVideos.putString("url",mReviews);
+        getSupportLoaderManager().initLoader(DATA_RESULT_LOADER_REVIEWS_ID,queryReviews,dataResultLoaderReviews);
 
     }
 
-    private String mVideos = mainActivity.URL_GENERIC +movieId+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
+//    private String mVideos = mainActivity.URL_GENERIC +movieId+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
 
     private LoaderManager.LoaderCallbacks<String> dataResultLoaderVideos = new LoaderManager.LoaderCallbacks<String>() {
         @Override
@@ -105,7 +106,6 @@ public class DetailActivity extends AppCompatActivity{
 
                 @Override
                 public String loadInBackground() {
-                    Log.v("URL VIDEO: ", mVideos);
                     return mainActivity.download(mVideos);
                 }
             };
@@ -120,7 +120,6 @@ public class DetailActivity extends AppCompatActivity{
                 Boolean parse = new JSON(data,videos).parseVideos();
 
                 if(parse){
-                    Log.v("PARSE VIDEOS: ", String.valueOf(parse));
                     Log.v("URL VIDEO DEPOIS: ", data);
 //                    recyclerView.setAdapter(new MovieAdapter(context, movies));
                 }else {
@@ -137,13 +136,48 @@ public class DetailActivity extends AppCompatActivity{
 
     private LoaderManager.LoaderCallbacks<String> dataResultLoaderReviews = new LoaderManager.LoaderCallbacks<String>() {
         @Override
-        public Loader<String> onCreateLoader(int id, Bundle args) {
-            return null;
+        public Loader<String> onCreateLoader(int id, final Bundle args) {
+            return new AsyncTaskLoader<String>(context) {
+                @Override
+                protected void onStartLoading() {
+                    super.onStartLoading();
+                    if(args == null) {
+                        Log.v("ARGS DETAIL: ", String.valueOf(args));
+                        return;
+                    }
+
+                    if(mainActivity.isConnected(context)){
+//                        Log.v("INTERNET: ", "CONNECTED");
+                        Toast.makeText(context, "CONNECTED", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Log.v("INTERNET: ", "DISCONNECTED");
+                    }
+
+                    forceLoad();
+                }
+
+                @Override
+                public String loadInBackground() {
+                    return mainActivity.download(mReviews);
+                }
+            };
         }
 
         @Override
         public void onLoadFinished(Loader<String> loader, String data) {
+            if (data.startsWith("Error")) {
+                String error = data;
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+            } else {
+//                Boolean parse = new JSON(data,reviews).parseReviews();
 
+//                if(parse){
+//                    Log.v("URL VIDEO DEPOIS: ", data);
+////                    recyclerView.setAdapter(new MovieAdapter(context, movies));
+//                }else {
+//                    Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
+//                }
+            }
         }
 
         @Override
