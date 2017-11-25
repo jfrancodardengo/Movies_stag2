@@ -14,8 +14,8 @@ public class JSON {
     private String jsonData;
     private String imageURL;
     private ArrayList<Movie> movies =new ArrayList<>();
-    private ArrayList<Reviews> reviews =new ArrayList<>();
-    private ArrayList<Videos> videos =new ArrayList<>();
+    private static ArrayList<Reviews> reviews =new ArrayList<>();
+    private static ArrayList<Videos> videos =new ArrayList<>();
 //    private int idMovie;
 
     public JSON(String jsonData, String imageURL, ArrayList<Movie> movies) {
@@ -69,7 +69,7 @@ public class JSON {
         }
     }
 
-    public Boolean parseReviews(){
+    public static ArrayList<Reviews> parseReviews(String jsonData){
         try
         {
             JSONObject reader = new JSONObject(jsonData);
@@ -89,14 +89,13 @@ public class JSON {
                 reviews.add(review);
 
             }
-            return true;
         } catch (JSONException e) {
             e.printStackTrace();
-            return false;
         }
+        return reviews;
     }
 
-    public Boolean parseVideos(){
+    public static ArrayList<Videos> parseVideos(String jsonData){
         try
         {
             JSONObject reader = new JSONObject(jsonData);
@@ -116,12 +115,10 @@ public class JSON {
                 videos.add(video);
 
             }
-            return true;
         } catch (JSONException e) {
             e.printStackTrace();
-            return false;
         }
+        return videos;
     }
-
 
 }

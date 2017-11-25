@@ -15,6 +15,10 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -117,14 +121,7 @@ public class DetailActivity extends AppCompatActivity{
                 String error = data;
                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
             } else {
-                Boolean parse = new JSON(data,videos).parseVideos();
-
-                if(parse){
-                    Log.v("URL VIDEO DEPOIS: ", data);
-//                    recyclerView.setAdapter(new MovieAdapter(context, movies));
-                }else {
-                    Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
-                }
+                JSON.parseVideos(data);
             }
         }
 
@@ -169,14 +166,7 @@ public class DetailActivity extends AppCompatActivity{
                 String error = data;
                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
             } else {
-//                Boolean parse = new JSON(data,reviews).parseReviews();
-
-//                if(parse){
-//                    Log.v("URL VIDEO DEPOIS: ", data);
-////                    recyclerView.setAdapter(new MovieAdapter(context, movies));
-//                }else {
-//                    Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
-//                }
+                JSON.parseReviews(data);
             }
         }
 
@@ -185,4 +175,5 @@ public class DetailActivity extends AppCompatActivity{
 
         }
     };
+
 }
