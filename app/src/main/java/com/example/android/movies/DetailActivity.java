@@ -40,8 +40,8 @@ public class DetailActivity extends AppCompatActivity{
     private String mVideos;
     private String mReviews;
 
-    private ArrayList<Reviews> reviews =new ArrayList<>();
-    private ArrayList<Videos> videos =new ArrayList<>();
+//    private ArrayList<Reviews> reviews =new ArrayList<>();
+//    private ArrayList<Videos> videos =new ArrayList<>();
 
     private static final int DATA_RESULT_LOADER_VIDEOS_ID = 1;
     private static final int DATA_RESULT_LOADER_REVIEWS_ID = 2;
@@ -83,8 +83,6 @@ public class DetailActivity extends AppCompatActivity{
         getSupportLoaderManager().initLoader(DATA_RESULT_LOADER_REVIEWS_ID,queryReviews,dataResultLoaderReviews);
 
     }
-
-//    private String mVideos = mainActivity.URL_GENERIC +movieId+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
 
     private LoaderManager.LoaderCallbacks<String> dataResultLoaderVideos = new LoaderManager.LoaderCallbacks<String>() {
         @Override

@@ -71,18 +71,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         return movies.size();
     }
 
-    private void openDetailActivity(int mMovieId,double mVoteAverage, String mOriginalTitle, String mImage, String mSynopsis, String mRealeaseDate)
-    {
-//        Intent i=new Intent(context,DetailActivity.class);
-        Intent i=new Intent(context,OpenDetailActivity.class);
-        i.putExtra("movies",movies);
-//        i.putExtra("MOVIE_KEY",mMovieId);
-//        i.putExtra("VOTE_KEY",mVoteAverage);
-//        i.putExtra("TITLE_KEY",mOriginalTitle);
-//        i.putExtra("IMAGE_KEY",mImage);
-//        i.putExtra("SYNOPSIS_KEY",mSynopsis);
-//        i.putExtra("RELEASE_KEY",mRealeaseDate);
-        context.startActivity(i);
-    }
+//    private void openDetailActivity(int mMovieId,double mVoteAverage, String mOriginalTitle, String mImage, String mSynopsis, String mRealeaseDate)
+//    {
+////        Intent i=new Intent(context,DetailActivity.class);
+//        Intent i=new Intent(context,OpenDetailActivity.class);
+//        i.putExtra("movies",movies);
+////        i.putExtra("MOVIE_KEY",mMovieId);
+////        i.putExtra("VOTE_KEY",mVoteAverage);
+////        i.putExtra("TITLE_KEY",mOriginalTitle);
+////        i.putExtra("IMAGE_KEY",mImage);
+////        i.putExtra("SYNOPSIS_KEY",mSynopsis);
+////        i.putExtra("RELEASE_KEY",mRealeaseDate);
+//        context.startActivity(i);
+//    }
 
 }
