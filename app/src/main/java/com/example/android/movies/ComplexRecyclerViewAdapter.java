@@ -108,6 +108,15 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         final Movie movie = movies.get(position);
         if (movie != null) {
             Picasso.with(context).load(movie.getImage()).into(vh.thumbnailFilm);
+
+            vh.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    Intent i = new Intent(context,DetailActivity.class);
+                    i.putExtra("movie",movie);
+                    context.startActivity(i);
+                }
+            });
         }
     }
 

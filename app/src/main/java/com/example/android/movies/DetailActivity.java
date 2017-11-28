@@ -8,6 +8,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,8 +34,10 @@ public class DetailActivity extends AppCompatActivity{
     Context context = DetailActivity.this;
     MainActivity mainActivity = new MainActivity();
     Movie movie = new Movie();
-    private List<Videos> videos;
-    private List<Reviews> reviews;
+    Videos video = new Videos();
+    Reviews review = new Reviews();
+    private List<Videos> videos = new ArrayList<Videos>();
+    private List<Reviews> reviews = new ArrayList<Reviews>();
     TextView title, vote, release, synopsis;
     ImageView imageThumbnail;
     private String mVideos;
@@ -54,9 +58,7 @@ public class DetailActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_activity);
         recyclerView = (RecyclerView)findViewById(R.id.recycler_detail);
-
-        adapter = new ComplexRecyclerViewAdapter(movie,videos,reviews);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
@@ -81,7 +83,10 @@ public class DetailActivity extends AppCompatActivity{
 
         Picasso.with(DetailActivity.this).load(movie.getImage()).into(imageThumbnail);
 
-        adapter = new ComplexRecyclerViewAdapter(movie,null,null);
+        Log.v("MOVIE: ", movie.getOriginalTitle());
+
+        adapter = new ComplexRecyclerViewAdapter(movie,videos,reviews);
+        recyclerView.setAdapter(adapter);
 
         Bundle queryVideos = new Bundle();
         queryVideos.putString("url",mVideos);
@@ -132,13 +137,8 @@ public class DetailActivity extends AppCompatActivity{
                 adapter.addTrailers(videos);
                 adapter.notifyDataSetChanged();
 
-
-//                adapter.addTrailers(JSON.parseVideos(data));
-//                recyclerView.setAdapter(new ComplexRecyclerViewAdapter(movie,videos,reviews));
-                Log.v("MOVIE: ", movie.toString());
                 Log.v("VIDEOS: ", videos.toString());
-                Log.v("REVIEWS: ", reviews.toString());
-//                JSON.parseVideos(data);
+
             }
         }
 
@@ -184,7 +184,11 @@ public class DetailActivity extends AppCompatActivity{
                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
             } else {
 //                JSON.parseReviews(data);
-                adapter.addReviews(JSON.parseReviews(data));
+                reviews = JSON.parseReviews(data);
+                adapter.addReviews(reviews);
+                adapter.notifyDataSetChanged();
+
+                Log.v("REVIEWS: ", String.valueOf(reviews.toArray().length));
             }
         }
 
