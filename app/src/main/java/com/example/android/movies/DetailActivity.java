@@ -137,7 +137,7 @@ public class DetailActivity extends AppCompatActivity{
 //                recyclerView.setAdapter(new ComplexRecyclerViewAdapter(movie,videos,reviews));
                 Log.v("MOVIE: ", movie.toString());
                 Log.v("VIDEOS: ", videos.toString());
-//                Log.v("REVIEWS: ", reviews.toString());
+                Log.v("REVIEWS: ", reviews.toString());
 //                JSON.parseVideos(data);
             }
         }
