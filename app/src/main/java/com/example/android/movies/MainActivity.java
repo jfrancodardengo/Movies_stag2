@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     String imageURL = "http://image.tmdb.org/t/p/w342";
     Boolean parse;
     ArrayList<Movie> movies = new ArrayList<>();
+    ArrayList<Videos> videos = new ArrayList<>();
+    ArrayList<Reviews> reviews = new ArrayList<>();
 
     Movie movie;
 
@@ -133,12 +135,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             if(parse){
                 recyclerView.setAdapter(new MovieAdapter(context, movies));
+//                bindDataToAdapter();
             }else {
                 Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
             }
         }
     }
 
+//    private void bindDataToAdapter() {
+//        // Bind adapter to recycler view object
+//        recyclerView.setAdapter(new ComplexRecyclerViewAdapter(movies,videos,reviews));
+//    }
 
     @Override
     public void onLoaderReset(Loader loader) {
