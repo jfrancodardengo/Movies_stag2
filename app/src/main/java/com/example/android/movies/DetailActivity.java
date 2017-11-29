@@ -2,6 +2,9 @@ package com.example.android.movies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -38,6 +41,8 @@ public class DetailActivity extends AppCompatActivity{
     Reviews review = new Reviews();
     private List<Videos> videos = new ArrayList<Videos>();
     private List<Reviews> reviews = new ArrayList<Reviews>();
+
+
     TextView title, vote, release, synopsis;
     ImageView imageThumbnail;
     private String mVideos;
@@ -69,9 +74,26 @@ public class DetailActivity extends AppCompatActivity{
         synopsis = (TextView)findViewById(R.id.tv_synopsis);
         imageThumbnail = (ImageView)findViewById(R.id.img_thumbnail_film);
 
-        //obter intent
+        //get intent movie
         Intent i = this.getIntent();
         movie = i.getExtras().getParcelable("movie");
+
+        //get intent video
+//        Intent v = this.getIntent();
+//        video = v.getExtras().getParcelable("video");
+//
+//        Uri src = Uri.parse("https://www.youtube.com/watch?v="+video.getKey());
+//        Intent webIntent = new Intent(Intent.ACTION_VIEW, src);
+//        PackageManager packageManager = getPackageManager();
+//        List<ResolveInfo> activities = packageManager.queryIntentActivities(webIntent, 0);
+//        boolean isIntentSafe = activities.size() > 0;
+//        // Start an activity if it's safe
+//        if (isIntentSafe) {
+//            startActivity(webIntent);
+//        }
+//
+//        Log.v("TRAILER: ", video.getKey() + " - " + video.getName());
+//        Log.v("URL TRAILER: ", src.toString());
 
         mVideos = mainActivity.URL_GENERIC +movie.getMovieId()+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
         mReviews = mainActivity.URL_GENERIC + movie.getMovieId() + "/reviews?api_key="+mainActivity.apiKey+"&language=pt-BR";
@@ -84,8 +106,9 @@ public class DetailActivity extends AppCompatActivity{
         Picasso.with(DetailActivity.this).load(movie.getImage()).into(imageThumbnail);
 
         Log.v("MOVIE: ", movie.getOriginalTitle());
+        Log.v("MOVIE ID: ", String.valueOf(movie.getMovieId()));
 
-        adapter = new ComplexRecyclerViewAdapter(movie,videos,reviews);
+        adapter = new ComplexRecyclerViewAdapter(context,movie,videos,reviews);
         recyclerView.setAdapter(adapter);
 
         Bundle queryVideos = new Bundle();
@@ -137,7 +160,7 @@ public class DetailActivity extends AppCompatActivity{
                 adapter.addTrailers(videos);
                 adapter.notifyDataSetChanged();
 
-                Log.v("VIDEOS: ", videos.toString());
+                Log.v("VIDEOS: ", String.valueOf(videos.toArray().length));
 
             }
         }

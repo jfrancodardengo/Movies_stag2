@@ -22,10 +22,10 @@ import java.util.List;
 
 public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private List<Movie> movies;
+    private List<Movie> movies = new ArrayList<Movie>();
     private Movie movie;
-    private List<Videos> videos;
-    private List<Reviews> reviews;
+    private List<Videos> videos = new ArrayList<Videos>();
+    private List<Reviews> reviews = new ArrayList<Reviews>();
 
 
     private final int VIDEO = 0, REVIEWS = 1;
@@ -33,7 +33,8 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public ComplexRecyclerViewAdapter() {
     }
 
-    public ComplexRecyclerViewAdapter(Movie movie, List<Videos> videos, List<Reviews> reviews){
+    public ComplexRecyclerViewAdapter(Context context,Movie movie, List<Videos> videos, List<Reviews> reviews){
+        this.context = context;
         this.movie = movie;
         this.videos = videos;
         this.reviews = reviews;
@@ -88,6 +89,9 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             vh1.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
+//                    Intent i = new Intent(context,DetailActivity.class);
+//                    i.putExtra("video",video);
+//                    context.startActivity(i);
                     Uri src = Uri.parse("https://www.youtube.com/watch?v="+video.getKey());
                     Intent webIntent = new Intent(Intent.ACTION_VIEW, src);
                     context.startActivity(webIntent);
