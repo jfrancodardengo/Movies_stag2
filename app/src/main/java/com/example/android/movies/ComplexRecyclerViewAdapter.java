@@ -24,14 +24,12 @@ import java.util.List;
 
 public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-
-//    private List<Movie> movies = new ArrayList<Movie>();
     private Movie movie;
     private List<Videos> videos = new ArrayList<Videos>();
     private List<Reviews> reviews = new ArrayList<Reviews>();
 
 
-    private final int MOVIE=0, VIDEO = 1, REVIEWS = 2;
+    private final static int MOVIE=0, VIDEO = 1, REVIEWS = 2;
 
     public ComplexRecyclerViewAdapter() {
     }
@@ -59,13 +57,14 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 //                View view2 = inflater.inflate(R.layout.model_review,parent,false);
 //                viewHolder = new ReviewViewHolder(view2);
 //                break;
-            default:
-                return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.detail_activity,parent,false));
+            case MOVIE:
+                return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.model_overview,parent,false));
 //                return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.model_film,parent,false));
 //                View view3 = inflater.inflate(R.layout.model_film,parent,false);
 //                viewHolder = new MovieViewHolder(view3);
 //                break;
         }
+        throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
 //        return null;
     }
 
@@ -119,7 +118,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private void configureMovieHolder(MovieViewHolder vh, int position) {
 //        final Movie movie = movies.get(position);
         if (movie != null) {
-            Picasso.with(context).load(movie.getImage()).into(vh.thumbnailFilm);
+            Picasso.with(context).load(movie.getImage()).into(vh.thumbnailDetail);
 
             vh.title.setText(movie.getOriginalTitle());
             vh.vote.setText(String.valueOf(movie.getVoteAverage()));
@@ -141,12 +140,11 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
-//            return -1;
             return MOVIE;
-        }else if(position >0 && position < videos.size()){
-            return VIDEO;
-        }else{
+        }else if(position > videos.size()){
             return REVIEWS;
+        }else{
+            return VIDEO;
         }
     }
 

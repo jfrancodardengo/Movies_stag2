@@ -3,7 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="24dp"
+        android:textColor="@color/colorAccent"
+        android:gravity="center_vertical"
+        android:textSize="24sp"
+        android:text="Trailers"/>
 
     <TextView
         android:id="@+id/name_video"
@@ -11,10 +23,10 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingTop="24dp"
+        android:paddingTop="8dp"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:gravity="center_vertical"
         android:textSize="24sp"
-        tools:text="NOME DO FILME"/>
+        tools:text="O segredo"/>
 
 </LinearLayout>

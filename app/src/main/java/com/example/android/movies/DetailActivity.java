@@ -37,23 +37,15 @@ public class DetailActivity extends AppCompatActivity{
     Context context = DetailActivity.this;
     MainActivity mainActivity = new MainActivity();
     Movie movie = new Movie();
-    Videos video = new Videos();
-    Reviews review = new Reviews();
     private List<Videos> videos = new ArrayList<Videos>();
     private List<Reviews> reviews = new ArrayList<Reviews>();
 
-
-    TextView title, vote, release, synopsis;
-    ImageView imageThumbnail;
     private String mVideos;
     private String mReviews;
 
     RecyclerView recyclerView;
 
     ComplexRecyclerViewAdapter adapter;
-
-//    private ArrayList<Reviews> reviews =new ArrayList<>();
-//    private ArrayList<Videos> videos =new ArrayList<>();
 
     private static final int DATA_RESULT_LOADER_VIDEOS_ID = 1;
     private static final int DATA_RESULT_LOADER_REVIEWS_ID = 2;
@@ -68,42 +60,17 @@ public class DetailActivity extends AppCompatActivity{
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-//        title = (TextView)findViewById(R.id.tv_title);
-//        vote = (TextView)findViewById(R.id.tv_vote);
-//        release = (TextView)findViewById(R.id.tv_release);
-//        synopsis = (TextView)findViewById(R.id.tv_synopsis);
-//        imageThumbnail = (ImageView)findViewById(R.id.img_thumbnail_film);
-
         //get intent movie
         Intent i = this.getIntent();
         movie = i.getExtras().getParcelable("movie");
 
-        //get intent video
-//        Intent v = this.getIntent();
-//        video = v.getExtras().getParcelable("video");
-//
-//        Uri src = Uri.parse("https://www.youtube.com/watch?v="+video.getKey());
-//        Intent webIntent = new Intent(Intent.ACTION_VIEW, src);
-//        PackageManager packageManager = getPackageManager();
-//        List<ResolveInfo> activities = packageManager.queryIntentActivities(webIntent, 0);
-//        boolean isIntentSafe = activities.size() > 0;
-//        // Start an activity if it's safe
-//        if (isIntentSafe) {
-//            startActivity(webIntent);
-//        }
-//
+
 //        Log.v("TRAILER: ", video.getKey() + " - " + video.getName());
 //        Log.v("URL TRAILER: ", src.toString());
 
         mVideos = mainActivity.URL_GENERIC +movie.getMovieId()+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
         mReviews = mainActivity.URL_GENERIC + movie.getMovieId() + "/reviews?api_key="+mainActivity.apiKey+"&language=pt-BR";
 
-//        title.setText(movie.getOriginalTitle());
-//        vote.setText(String.valueOf(movie.getVoteAverage()));
-//        release.setText(movie.getRealeaseDate());
-//        synopsis.setText(movie.getSynopsis());
-//
-//        Picasso.with(DetailActivity.this).load(movie.getImage()).into(imageThumbnail);
 
         Log.v("MOVIE: ", movie.getOriginalTitle());
         Log.v("MOVIE ID: ", String.valueOf(movie.getMovieId()));

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     ImageView thumbnailFilm;
+    ImageView thumbnailDetail;
     TextView title, vote, release, synopsis;
 
 
@@ -25,7 +26,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnC
         vote = (TextView)itemView.findViewById(R.id.tv_vote);
         release = (TextView)itemView.findViewById(R.id.tv_release);
         synopsis = (TextView)itemView.findViewById(R.id.tv_synopsis);
-
+        thumbnailDetail = (ImageView) itemView.findViewById(R.id.img_thumbnail_film);
 
         itemView.setOnClickListener(this);
     }
