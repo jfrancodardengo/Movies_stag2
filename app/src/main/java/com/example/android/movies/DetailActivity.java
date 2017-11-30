@@ -61,18 +61,18 @@ public class DetailActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.detail_activity);
+//        setContentView(R.layout.detail_activity);
         recyclerView = (RecyclerView)findViewById(R.id.recycler_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        title = (TextView)findViewById(R.id.tv_title);
-        vote = (TextView)findViewById(R.id.tv_vote);
-        release = (TextView)findViewById(R.id.tv_release);
-        synopsis = (TextView)findViewById(R.id.tv_synopsis);
-        imageThumbnail = (ImageView)findViewById(R.id.img_thumbnail_film);
+//        title = (TextView)findViewById(R.id.tv_title);
+//        vote = (TextView)findViewById(R.id.tv_vote);
+//        release = (TextView)findViewById(R.id.tv_release);
+//        synopsis = (TextView)findViewById(R.id.tv_synopsis);
+//        imageThumbnail = (ImageView)findViewById(R.id.img_thumbnail_film);
 
         //get intent movie
         Intent i = this.getIntent();
@@ -98,12 +98,12 @@ public class DetailActivity extends AppCompatActivity{
         mVideos = mainActivity.URL_GENERIC +movie.getMovieId()+ "/videos?api_key="+mainActivity.apiKey+"&language=pt-BR";
         mReviews = mainActivity.URL_GENERIC + movie.getMovieId() + "/reviews?api_key="+mainActivity.apiKey+"&language=pt-BR";
 
-        title.setText(movie.getOriginalTitle());
-        vote.setText(String.valueOf(movie.getVoteAverage()));
-        release.setText(movie.getRealeaseDate());
-        synopsis.setText(movie.getSynopsis());
-
-        Picasso.with(DetailActivity.this).load(movie.getImage()).into(imageThumbnail);
+//        title.setText(movie.getOriginalTitle());
+//        vote.setText(String.valueOf(movie.getVoteAverage()));
+//        release.setText(movie.getRealeaseDate());
+//        synopsis.setText(movie.getSynopsis());
+//
+//        Picasso.with(DetailActivity.this).load(movie.getImage()).into(imageThumbnail);
 
         Log.v("MOVIE: ", movie.getOriginalTitle());
         Log.v("MOVIE ID: ", String.valueOf(movie.getMovieId()));

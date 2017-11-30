@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -22,13 +24,14 @@ import java.util.List;
 
 public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private List<Movie> movies = new ArrayList<Movie>();
+
+//    private List<Movie> movies = new ArrayList<Movie>();
     private Movie movie;
     private List<Videos> videos = new ArrayList<Videos>();
     private List<Reviews> reviews = new ArrayList<Reviews>();
 
 
-    private final int VIDEO = 0, REVIEWS = 1;
+    private final int MOVIE=0, VIDEO = 1, REVIEWS = 2;
 
     public ComplexRecyclerViewAdapter() {
     }
@@ -42,24 +45,28 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder viewHolder;
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+//        RecyclerView.ViewHolder viewHolder;
+//        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         switch (viewType){
             case VIDEO:
-                View view = inflater.inflate(R.layout.model_video,parent,false);
-                viewHolder = new VideoViewHolder(view);
-                break;
+                return new VideoViewHolder(LayoutInflater.from(context).inflate(R.layout.model_video,parent,false));
+//                View view = inflater.inflate(R.layout.model_video,parent,false);
+//                viewHolder = new VideoViewHolder(view);
+//                break;
             case REVIEWS:
-                View view2 = inflater.inflate(R.layout.model_review,parent,false);
-                viewHolder = new ReviewViewHolder(view2);
-                break;
+                return new ReviewViewHolder(LayoutInflater.from(context).inflate(R.layout.model_review,parent,false));
+//                View view2 = inflater.inflate(R.layout.model_review,parent,false);
+//                viewHolder = new ReviewViewHolder(view2);
+//                break;
             default:
-                View view3 = inflater.inflate(R.layout.model_film,parent,false);
-                viewHolder = new MovieViewHolder(view3);
-                break;
+                return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.detail_activity,parent,false));
+//                return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.model_film,parent,false));
+//                View view3 = inflater.inflate(R.layout.model_film,parent,false);
+//                viewHolder = new MovieViewHolder(view3);
+//                break;
         }
-        return viewHolder;
+//        return null;
     }
 
     @Override
@@ -73,7 +80,8 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 ReviewViewHolder reviewHolder = (ReviewViewHolder) holder;
                 configureReviewHolder(reviewHolder,position);
                 break;
-            default:
+//            case MOVIE:
+              default:
                 MovieViewHolder movieHolder = (MovieViewHolder) holder;
                 configureMovieHolder(movieHolder,position);
                 break;
@@ -109,9 +117,14 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     private void configureMovieHolder(MovieViewHolder vh, int position) {
-        final Movie movie = movies.get(position);
+//        final Movie movie = movies.get(position);
         if (movie != null) {
             Picasso.with(context).load(movie.getImage()).into(vh.thumbnailFilm);
+
+            vh.title.setText(movie.getOriginalTitle());
+            vh.vote.setText(String.valueOf(movie.getVoteAverage()));
+            vh.release.setText(movie.getRealeaseDate());
+            vh.synopsis.setText(movie.getSynopsis());
 
             vh.setItemClickListener(new ItemClickListener() {
                 @Override
@@ -127,18 +140,30 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public int getItemViewType(int position) {
-        if(videos.get(position) instanceof Videos){
+        if (position == 0) {
+            return -1;
+//            return MOVIE;
+        }else if(position >0 && position < videos.size()){
             return VIDEO;
-        }else if(reviews.get(position) instanceof Reviews){
+        }else{
             return REVIEWS;
         }
-        return -1;
     }
+
+//    @Override
+//    public int getItemViewType(int position) {
+//        if(videos.get(position) instanceof Videos){
+//            return VIDEO;
+//        }else if(reviews.get(position) instanceof Reviews){
+//            return REVIEWS;
+//        }
+//        return -1;
+//    }
 
 
     @Override
     public int getItemCount() {
-        return this.movies.size() + this.reviews.size() + this.videos.size();
+        return 1 + this.reviews.size() + this.videos.size();
     }
 
     public void addTrailers(List<Videos> videos){

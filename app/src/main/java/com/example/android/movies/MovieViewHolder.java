@@ -3,6 +3,7 @@ package com.example.android.movies;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by Guto on 15/10/2017.
@@ -10,12 +11,22 @@ import android.widget.ImageView;
 
 public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     ImageView thumbnailFilm;
+    TextView title, vote, release, synopsis;
+
+
     ItemClickListener itemClickListener;
 
     public MovieViewHolder(View itemView){
         super(itemView);
 
         thumbnailFilm = (ImageView)itemView.findViewById(R.id.thumbnail_film);
+
+        title = (TextView)itemView.findViewById(R.id.tv_title);
+        vote = (TextView)itemView.findViewById(R.id.tv_vote);
+        release = (TextView)itemView.findViewById(R.id.tv_release);
+        synopsis = (TextView)itemView.findViewById(R.id.tv_synopsis);
+
+
         itemView.setOnClickListener(this);
     }
 
