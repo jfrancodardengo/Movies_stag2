@@ -80,8 +80,8 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 ReviewViewHolder reviewHolder = (ReviewViewHolder) holder;
                 configureReviewHolder(reviewHolder,position);
                 break;
-//            case MOVIE:
-              default:
+            case MOVIE:
+//              default:
                 MovieViewHolder movieHolder = (MovieViewHolder) holder;
                 configureMovieHolder(movieHolder,position);
                 break;
@@ -141,8 +141,8 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
-            return -1;
-//            return MOVIE;
+//            return -1;
+            return MOVIE;
         }else if(position >0 && position < videos.size()){
             return VIDEO;
         }else{

@@ -61,7 +61,7 @@ public class DetailActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.detail_activity);
+        setContentView(R.layout.detail_activity);
         recyclerView = (RecyclerView)findViewById(R.id.recycler_detail);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
