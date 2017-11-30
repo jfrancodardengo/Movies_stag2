@@ -9,12 +9,13 @@ import android.widget.TextView;
  */
 
 public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-    TextView name;
+    TextView name,header;
     ItemClickListener itemClickListener;
 
     public VideoViewHolder(View itemView) {
         super(itemView);
         name = (TextView)itemView.findViewById(R.id.name_video);
+        header = (TextView)itemView.findViewById(R.id.header_video);
         itemView.setOnClickListener(this);
     }
 

@@ -89,26 +89,35 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     private void configureVideoHolder(VideoViewHolder vh1, int position) {
-        final Videos video = videos.get(position);
-        if (video != null) {
-            vh1.name.setText(video.getName());
+        final Videos video = videos.get(position - VIDEO);
 
-            vh1.setItemClickListener(new ItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
+            if(position == 1) {
+                vh1.header.setVisibility(View.VISIBLE);
+            }else{
+                vh1.header.setVisibility(View.INVISIBLE);
+            }
+            if (video != null) {
+
+                vh1.name.setText(video.getName());
+
+                vh1.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
 //                    Intent i = new Intent(context,DetailActivity.class);
 //                    i.putExtra("video",video);
 //                    context.startActivity(i);
-                    Uri src = Uri.parse("https://www.youtube.com/watch?v="+video.getKey());
-                    Intent webIntent = new Intent(Intent.ACTION_VIEW, src);
-                    context.startActivity(webIntent);
-                }
-            });
-        }
+                        Uri src = Uri.parse("https://www.youtube.com/watch?v=" + video.getKey());
+                        Intent webIntent = new Intent(Intent.ACTION_VIEW, src);
+                        context.startActivity(webIntent);
+                    }
+                });
+            }
+
+
     }
 
     private void configureReviewHolder(ReviewViewHolder vh2, int position) {
-        final Reviews review = reviews.get(position);
+        final Reviews review = reviews.get(position - REVIEWS);
         if (review != null) {
             vh2.author.setText(review.getAuthor());
             vh2.content.setText(review.getContent());
