@@ -43,29 +43,15 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        RecyclerView.ViewHolder viewHolder;
-//        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
         switch (viewType){
             case VIDEO:
                 return new VideoViewHolder(LayoutInflater.from(context).inflate(R.layout.model_video,parent,false));
-//                View view = inflater.inflate(R.layout.model_video,parent,false);
-//                viewHolder = new VideoViewHolder(view);
-//                break;
             case REVIEWS:
                 return new ReviewViewHolder(LayoutInflater.from(context).inflate(R.layout.model_review,parent,false));
-//                View view2 = inflater.inflate(R.layout.model_review,parent,false);
-//                viewHolder = new ReviewViewHolder(view2);
-//                break;
             case MOVIE:
                 return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.model_overview,parent,false));
-//                return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.model_film,parent,false));
-//                View view3 = inflater.inflate(R.layout.model_film,parent,false);
-//                viewHolder = new MovieViewHolder(view3);
-//                break;
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
-//        return null;
     }
 
     @Override
@@ -103,9 +89,6 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 vh1.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-//                    Intent i = new Intent(context,DetailActivity.class);
-//                    i.putExtra("video",video);
-//                    context.startActivity(i);
                         Uri src = Uri.parse("https://www.youtube.com/watch?v=" + video.getKey());
                         Intent webIntent = new Intent(Intent.ACTION_VIEW, src);
                         context.startActivity(webIntent);
@@ -118,6 +101,13 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void configureReviewHolder(ReviewViewHolder vh2, int position) {
         final Reviews review = reviews.get(position - REVIEWS);
+
+        if(position == 2) {
+            vh2.header.setVisibility(View.VISIBLE);
+        }else{
+            vh2.header.setVisibility(View.INVISIBLE);
+        }
+
         if (review != null) {
             vh2.author.setText(review.getAuthor());
             vh2.content.setText(review.getContent());
@@ -125,7 +115,6 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     private void configureMovieHolder(MovieViewHolder vh, int position) {
-//        final Movie movie = movies.get(position);
         if (movie != null) {
             Picasso.with(context).load(movie.getImage()).into(vh.thumbnailDetail);
 
@@ -156,16 +145,6 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             return VIDEO;
         }
     }
-
-//    @Override
-//    public int getItemViewType(int position) {
-//        if(videos.get(position) instanceof Videos){
-//            return VIDEO;
-//        }else if(reviews.get(position) instanceof Reviews){
-//            return REVIEWS;
-//        }
-//        return -1;
-//    }
 
 
     @Override

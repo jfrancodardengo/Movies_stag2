@@ -27,12 +27,6 @@ import java.util.List;
  * Created by Guto on 15/10/2017.
  */
 
-
-/*ULTIMA RESPOSTA PARA O FÓRUM
-* I checked and is there necessary to put **String mVideos** and **String mReviews** inside `onCreate()` method after reading **Movie** from the Intent.
-*
-* */
-
 public class DetailActivity extends AppCompatActivity{
     Context context = DetailActivity.this;
     MainActivity mainActivity = new MainActivity();
@@ -101,8 +95,7 @@ public class DetailActivity extends AppCompatActivity{
                     }
 
                     if(mainActivity.isConnected(context)){
-//                        Log.v("INTERNET: ", "CONNECTED");
-                        Toast.makeText(context, "CONNECTED", Toast.LENGTH_SHORT).show();
+                        Log.v("INTERNET: ", "CONNECTED");
                     }else{
                         Log.v("INTERNET: ", "DISCONNECTED");
                     }
@@ -151,8 +144,7 @@ public class DetailActivity extends AppCompatActivity{
                     }
 
                     if(mainActivity.isConnected(context)){
-//                        Log.v("INTERNET: ", "CONNECTED");
-                        Toast.makeText(context, "CONNECTED", Toast.LENGTH_SHORT).show();
+                        Log.v("INTERNET: ", "CONNECTED");
                     }else{
                         Log.v("INTERNET: ", "DISCONNECTED");
                     }
