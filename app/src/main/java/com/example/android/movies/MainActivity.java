@@ -24,15 +24,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
     Context context = MainActivity.this;
     RecyclerView recyclerView;
 
-    public static final String URL_GENERIC= "https://api.themoviedb.org/3/movie/";
+    public static final String URL_GENERIC = "https://api.themoviedb.org/3/movie/";
 
     public static final String apiKey = com.example.android.movies.BuildConfig.MOVIES_KEY;
-    String jsonURLPopular = URL_GENERIC + "popular?api_key="+apiKey+"&language=pt-BR";
-    String jsonURLTopRated= URL_GENERIC + "top_rated?api_key="+apiKey+"&language=pt-BR";
+    String jsonURLPopular = URL_GENERIC + "popular?api_key=" + apiKey + "&language=pt-BR";
+    String jsonURLTopRated = URL_GENERIC + "top_rated?api_key=" + apiKey + "&language=pt-BR";
 
     String imageURL = "http://image.tmdb.org/t/p/w342";
     Boolean parse;
@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     Movie movie;
 
-    private static final int LOADER=1;
+    private static final int LOADER = 1;
 
-    private static final String QUERY_URL="";
+    private static final String QUERY_URL = "";
 
     private String jsonUrl;
 
@@ -52,48 +52,48 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film);
-        recyclerView = (RecyclerView)findViewById(R.id.recycler);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
 
         Bundle queryBundle = new Bundle();
-        queryBundle.putString(QUERY_URL,jsonURLPopular);
+        queryBundle.putString(QUERY_URL, jsonURLPopular);
 
         jsonUrl = queryBundle.getString(QUERY_URL);
 
-        getSupportLoaderManager().initLoader(LOADER,queryBundle,this);
+        getSupportLoaderManager().initLoader(LOADER, queryBundle, this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main,menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemClick = item.getItemId();
-        if (itemClick==android.R.id.home){
+        if (itemClick == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
             return true;
-        }else if (itemClick == R.id.action_votes){
+        } else if (itemClick == R.id.action_votes) {
 
             Bundle queryBundle = new Bundle();
-            queryBundle.putString(QUERY_URL,jsonURLTopRated);
+            queryBundle.putString(QUERY_URL, jsonURLTopRated);
 
             jsonUrl = queryBundle.getString(QUERY_URL);
 
-            getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
+            getSupportLoaderManager().restartLoader(LOADER, queryBundle, this);
 
             return true;
         }
         Bundle queryBundle = new Bundle();
-        queryBundle.putString(QUERY_URL,jsonURLPopular);
+        queryBundle.putString(QUERY_URL, jsonURLPopular);
 
         jsonUrl = queryBundle.getString(QUERY_URL);
 
-        getSupportLoaderManager().restartLoader(LOADER,queryBundle,this);
+        getSupportLoaderManager().restartLoader(LOADER, queryBundle, this);
 
         return super.onOptionsItemSelected(item);
     }
@@ -105,13 +105,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             protected void onStartLoading() {
                 super.onStartLoading();
-                if(args == null) {
+                if (args == null) {
                     return;
                 }
 
-                if(isConnected(context)){
+                if (isConnected(context)) {
                     Log.v("INTERNET: ", "CONNECTED");
-                }else{
+                } else {
                     Log.v("INTERNET: ", "DISCONNECTED");
                 }
 
@@ -131,12 +131,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             String error = data;
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
         } else {
-            parse = new JSON(data,imageURL,movies).parse();
+            parse = new JSON(data, imageURL, movies).parse();
 
-            if(parse){
+            if (parse) {
                 recyclerView.setAdapter(new MovieAdapter(context, movies));
 //                bindDataToAdapter();
-            }else {
+            } else {
                 Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
             }
         }

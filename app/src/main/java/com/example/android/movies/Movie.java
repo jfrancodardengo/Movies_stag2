@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by Guto on 14/10/2017.
  */
 
-public class Movie implements Parcelable{
+public class Movie implements Parcelable {
     private int mMovieId;
     private double mVoteAverage;
     private String mOriginalTitle;
@@ -15,19 +15,20 @@ public class Movie implements Parcelable{
     private String mSynopsis;
     private String mRealeaseDate;
 
-    public Movie(){}
+    public Movie() {
+    }
 
     /**
      * Constrói um novo objeto {@link Movie}.
      *
-     * @param avaliacaoVoto é a quantidade de votos avaliados
+     * @param avaliacaoVoto  é a quantidade de votos avaliados
      * @param tituloOriginal é o título original
-     * @param imagem é o código que identifica a imagem
-     * @param sinopse é a mSynopsis do filme
+     * @param imagem         é o código que identifica a imagem
+     * @param sinopse        é a mSynopsis do filme
      * @param dataLancamento é a data em que foi lançado o filme
      */
 
-    public Movie(int movieId,double avaliacaoVoto, String tituloOriginal, String imagem, String sinopse, String dataLancamento) {
+    public Movie(int movieId, double avaliacaoVoto, String tituloOriginal, String imagem, String sinopse, String dataLancamento) {
         this.mMovieId = movieId;
         this.mVoteAverage = avaliacaoVoto;
         this.mOriginalTitle = tituloOriginal;
@@ -39,7 +40,7 @@ public class Movie implements Parcelable{
     /* Using the `in` variable, we can retrieve the values that
      we originally wrote into the `Parcel`.  This constructor is usually
     private so that only the `CREATOR` field can access.*/
-    public Movie(Parcel in){
+    public Movie(Parcel in) {
         this.mMovieId = in.readInt();
         this.mVoteAverage = in.readDouble();
         this.mOriginalTitle = in.readString();

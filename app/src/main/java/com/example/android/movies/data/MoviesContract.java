@@ -20,7 +20,6 @@ public class MoviesContract {
     public static final String PATH_MOVIES = "movies";
 
 
-
     public static final class MoviesEntry implements BaseColumns {
 
         // TaskEntry content URI = base content URI + path

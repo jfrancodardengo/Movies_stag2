@@ -1,7 +1,9 @@
 package com.example.android.movies;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,19 +16,23 @@ public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnC
     ImageView thumbnailDetail;
     TextView title, vote, release, synopsis;
 
+    FloatingActionButton fabButton;
 
     ItemClickListener itemClickListener;
 
-    public MovieViewHolder(View itemView){
+
+    public MovieViewHolder(View itemView) {
         super(itemView);
 
-        thumbnailFilm = (ImageView)itemView.findViewById(R.id.thumbnail_film);
+        thumbnailFilm = (ImageView) itemView.findViewById(R.id.thumbnail_film);
 
-        title = (TextView)itemView.findViewById(R.id.tv_title);
-        vote = (TextView)itemView.findViewById(R.id.tv_vote);
-        release = (TextView)itemView.findViewById(R.id.tv_release);
-        synopsis = (TextView)itemView.findViewById(R.id.tv_synopsis);
+        title = (TextView) itemView.findViewById(R.id.tv_title);
+        vote = (TextView) itemView.findViewById(R.id.tv_vote);
+        release = (TextView) itemView.findViewById(R.id.tv_release);
+        synopsis = (TextView) itemView.findViewById(R.id.tv_synopsis);
         thumbnailDetail = (ImageView) itemView.findViewById(R.id.img_thumbnail_film);
+
+        fabButton = (FloatingActionButton) itemView.findViewById(R.id.fab);
 
         itemView.setOnClickListener(this);
     }
@@ -36,7 +42,10 @@ public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnC
         this.itemClickListener.onItemClick(this.getLayoutPosition());
     }
 
-    public void setItemClickListener(ItemClickListener itemClickListener){
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
+
+
 }

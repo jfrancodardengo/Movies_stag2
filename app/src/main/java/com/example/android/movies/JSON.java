@@ -13,9 +13,9 @@ import java.util.ArrayList;
 public class JSON {
     private String jsonData;
     private String imageURL;
-    private ArrayList<Movie> movies =new ArrayList<>();
-    private static ArrayList<Reviews> reviews =new ArrayList<>();
-    private static ArrayList<Videos> videos =new ArrayList<>();
+    private ArrayList<Movie> movies = new ArrayList<>();
+    private static ArrayList<Reviews> reviews = new ArrayList<>();
+    private static ArrayList<Videos> videos = new ArrayList<>();
 //    private int idMovie;
 
     public JSON(String jsonData, String imageURL, ArrayList<Movie> movies) {
@@ -34,16 +34,15 @@ public class JSON {
 //        this.reviews = reviews;
 //    }
 
-    public Boolean parse(){
-        try
-        {
+    public Boolean parse() {
+        try {
             JSONObject reader = new JSONObject(jsonData);
             JSONArray jsonArray = reader.getJSONArray("results");
             JSONObject jsonObject;
             movies.clear();
             Movie movie;
 
-            for (int i=0; i < jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObject = jsonArray.getJSONObject(i);
                 int idMovie = jsonObject.getInt("id");
                 Double voteAverage = jsonObject.getDouble("vote_average");
@@ -51,7 +50,7 @@ public class JSON {
                 String image = jsonObject.getString("poster_path");
                 String synopsis = jsonObject.getString("overview");
                 String release = jsonObject.getString("release_date");
-                String urlImagem = imageURL+image;
+                String urlImagem = imageURL + image;
 
                 movie = new Movie();
                 movie.setMovieId(idMovie);
@@ -69,16 +68,15 @@ public class JSON {
         }
     }
 
-    public static ArrayList<Reviews> parseReviews(String jsonData){
-        try
-        {
+    public static ArrayList<Reviews> parseReviews(String jsonData) {
+        try {
             JSONObject reader = new JSONObject(jsonData);
             JSONArray jsonArray = reader.getJSONArray("results");
             JSONObject jsonObject;
             reviews.clear();
             Reviews review;
 
-            for (int i=0; i < jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObject = jsonArray.getJSONObject(i);
                 String author = jsonObject.getString("author");
                 String content = jsonObject.getString("content");
@@ -95,16 +93,15 @@ public class JSON {
         return reviews;
     }
 
-    public static ArrayList<Videos> parseVideos(String jsonData){
-        try
-        {
+    public static ArrayList<Videos> parseVideos(String jsonData) {
+        try {
             JSONObject reader = new JSONObject(jsonData);
             JSONArray jsonArray = reader.getJSONArray("results");
             JSONObject jsonObject;
             videos.clear();
             Videos video;
 
-            for (int i=0; i < jsonArray.length(); i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObject = jsonArray.getJSONObject(i);
                 String key = jsonObject.getString("key");
                 String name = jsonObject.getString("name");

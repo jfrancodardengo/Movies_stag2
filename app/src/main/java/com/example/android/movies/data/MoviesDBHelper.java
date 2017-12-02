@@ -13,16 +13,16 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "movies.db";
     private static final int DATABASE_VERSION = 1;
 
-    public MoviesDBHelper(Context context){
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+    public MoviesDBHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_MOVIES_TABLE = "CREATE TABLE " +
                 MoviesContract.MoviesEntry.TABLE_NAME + " (" +
-                MoviesContract.MoviesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
-                MoviesContract.MoviesEntry.COLUMN_ID_MOVIE + " LONG NOT NULL, "+
+                MoviesContract.MoviesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                MoviesContract.MoviesEntry.COLUMN_ID_MOVIE + " LONG NOT NULL, " +
                 MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE + " TEXT NOT NULL, " +
                 MoviesContract.MoviesEntry.COLUMN_VOTE_MOVIE + " DOUBLE NOT NULL, " +
                 MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE + " TEXT NOT NULL, " +

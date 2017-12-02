@@ -8,14 +8,14 @@ import android.widget.TextView;
  * Created by 2425115 on 27/11/2017.
  */
 
-public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-    TextView name,header;
+public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    TextView name, header;
     ItemClickListener itemClickListener;
 
     public VideoViewHolder(View itemView) {
         super(itemView);
-        name = (TextView)itemView.findViewById(R.id.name_video);
-        header = (TextView)itemView.findViewById(R.id.header_video);
+        name = (TextView) itemView.findViewById(R.id.name_video);
+        header = (TextView) itemView.findViewById(R.id.header_video);
         itemView.setOnClickListener(this);
     }
 
@@ -23,7 +23,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnC
         this.itemClickListener.onItemClick(this.getLayoutPosition());
     }
 
-    public void setItemClickListener(ItemClickListener itemClickListener){
+    public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 

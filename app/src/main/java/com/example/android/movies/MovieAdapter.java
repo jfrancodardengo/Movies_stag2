@@ -21,7 +21,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     private Context context;
     private ArrayList<Movie> movies;
     private float scale;
-    private int width,height;
+    private int width, height;
 
     public MovieAdapter(Context context, ArrayList<Movie> movies) {
         this.context = context;
@@ -34,7 +34,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.model_film,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.model_film, parent, false);
         return new MovieViewHolder(view);
     }
 
@@ -51,8 +51,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
             @Override
             public void onItemClick(int position) {
 //                Intent i=new Intent(context,OpenDetailActivity.class);
-                Intent i = new Intent(context,DetailActivity.class);
-                i.putExtra("movie",movie);
+                Intent i = new Intent(context, DetailActivity.class);
+                i.putExtra("movie", movie);
                 context.startActivity(i);
 //                openDetailActivity(movie.getMovieId(),movie.getVoteAverage(), movie.getOriginalTitle(),
 //                        movie.getImage(), movie.getSynopsis(), movie.getRealeaseDate());

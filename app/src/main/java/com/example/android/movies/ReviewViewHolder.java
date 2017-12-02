@@ -8,15 +8,15 @@ import android.widget.TextView;
  * Created by 2425115 on 27/11/2017.
  */
 
-public class ReviewViewHolder extends RecyclerView.ViewHolder{
+public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
-    TextView author, content,header;
+    TextView author, content, header;
 
     public ReviewViewHolder(View itemView) {
         super(itemView);
-        author = (TextView)itemView.findViewById(R.id.author);
-        content = (TextView)itemView.findViewById(R.id.content);
-        header = (TextView)itemView.findViewById(R.id.header_review);
+        author = (TextView) itemView.findViewById(R.id.author);
+        content = (TextView) itemView.findViewById(R.id.content);
+        header = (TextView) itemView.findViewById(R.id.header_review);
     }
 
     public TextView getAuthor() {
