@@ -24,6 +24,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <RelativeLayout
+                android:id="@+id/layout_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/img_thumbnail_film"
                 android:layout_width="match_parent"
@@ -32,11 +37,24 @@
                 android:scaleType="fitXY"
                 tools:src="@drawable/it_a_coisa" />
 
+                <!-- Floating action button that launches AddTaskActivity when clicked -->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fab_margin"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    app:srcCompat="@android:drawable/ic_input_add"
+                    android:tint="@android:color/white"/>
+
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/img_thumbnail_film"
+                android:layout_below="@id/layout_img"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="24dp"
                 android:text="Titulo"
@@ -73,7 +91,6 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:text="Sinopse"
-
                 android:textSize="14sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />

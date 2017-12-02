@@ -1,11 +1,13 @@
 package com.example.android.movies;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -14,10 +16,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.movies.data.MoviesContract;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -79,6 +83,37 @@ public class DetailActivity extends AppCompatActivity{
         Bundle queryReviews = new Bundle();
         queryVideos.putString("url",mReviews);
         getSupportLoaderManager().initLoader(DATA_RESULT_LOADER_REVIEWS_ID,queryReviews,dataResultLoaderReviews);
+
+
+        /*
+         Set the Floating Action Button (FAB) to its corresponding View.
+         Attach an OnClickListener to it, so that when it's clicked, a new intent will be created
+         to launch the AddTaskActivity.
+         */
+        FloatingActionButton fabButton = (FloatingActionButton) findViewById(R.id.fab);
+
+        fabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //new content values
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, movie.getMovieId());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE, movie.getOriginalTitle());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_VOTE_MOVIE, movie.getVoteAverage());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE, movie.getImage());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE, movie.getSynopsis());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE, movie.getRealeaseDate());
+
+                Uri uri = getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI,contentValues);
+
+                if(uri != null){
+                    Toast.makeText(getBaseContext(),uri.toString(),Toast.LENGTH_LONG).show();
+                }
+
+                finish();
+            }
+        });
 
     }
 
