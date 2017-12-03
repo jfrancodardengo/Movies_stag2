@@ -54,7 +54,7 @@ public class MoviesContentProvider extends ContentProvider {
 
         Cursor retCursor;
 
-        switch (match){
+        switch (match) {
             case MOVIES:
                 retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
                         projection,
@@ -116,13 +116,13 @@ public class MoviesContentProvider extends ContentProvider {
         //rows deleted
         int rowsDeleted;
 
-        switch (match){
+        switch (match) {
             case MOVIES_WITH_ID:
                 // Get the task ID from the URI path
                 String id = uri.getPathSegments().get(1);
 
                 // Use selections/selectionArgs to filter for this ID
-                rowsDeleted = db.delete(MoviesContract.MoviesEntry.TABLE_NAME,"_id=?",new String[]{id});
+                rowsDeleted = db.delete(MoviesContract.MoviesEntry.TABLE_NAME, "idMovie=?", new String[]{id});
 
                 break;
 

@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     Boolean parse;
     ArrayList<Movie> movies = new ArrayList<>();
 
-    Movie movie;
+    FavoriteAdapter adapter;
 
     private static final int LOADER = 1;
 
@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         getSupportLoaderManager().initLoader(LOADER, queryBundle, this);
 
-        //registrar o menu de contexto
-//        registerForContextMenu(recyclerView);
 
     }
 
@@ -98,7 +96,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return true;
         } else if (itemClick == R.id.action_favoritos) {
             Cursor cursor = getQuery();
-            recyclerView.setAdapter(new FavoriteAdapter(context, cursor));
+
+            adapter = new FavoriteAdapter(context, cursor);
+            recyclerView.setAdapter(adapter);
+
+            adapter.swapCursor(cursor);
 
             return true;
 
@@ -128,8 +130,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    public int delete(){
-        return getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI,null,null);
+    public int delete() {
+        return getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI, null, null);
     }
 
 

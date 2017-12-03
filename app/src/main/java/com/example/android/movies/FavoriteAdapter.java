@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,13 +62,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     public void onBindViewHolder(final FavoriteViewHolder holder, int position) {
 
         movie = populateMovie(mCursor, position, holder);
-
-        /*FUNCTION TO DELETE*/
-//        int id = (int) holder.itemView.getTag();
-//        String stringId = Integer.toString(id);
-//        Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
-//        uri = uri.buildUpon().appendPath(stringId).build();
-//        mContext.getContentResolver().delete(uri,null,null);
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
@@ -120,19 +115,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
      * When data changes and a re-query occurs, this function swaps the old Cursor
      * with a newly updated Cursor (Cursor c) that is passed in.
      */
-    public Cursor swapCursor(Cursor c) {
-        // check if this cursor is the same as the previous cursor (mCursor)
-        if (mCursor == c) {
-            return null; // bc nothing has changed
-        }
-        Cursor temp = mCursor;
-        this.mCursor = c; // new cursor value assigned
-
-        //check if this is a valid cursor, then update the cursor
-        if (c != null) {
-            this.notifyDataSetChanged();
-        }
-        return temp;
+    void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        notifyDataSetChanged();
     }
 
     // Inner class for creating ViewHolders
@@ -167,13 +152,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             this.itemClickListener = itemClickListener;
         }
 
+
         //CREATED MENU CONTEXT
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             MenuItem Delete = menu.add(Menu.NONE, 1, Menu.NONE, "Excluir");
             Delete.setOnMenuItemClickListener(onEditMenu);
-
-//            menu.add(Menu.NONE, 1, Menu.NONE, "Deletar");
         }
 
 
@@ -181,7 +165,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(final MenuItem item) {
-
                 switch (item.getItemId()) {
                     case 1:
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -189,27 +172,28 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
                         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                int id = item.getItemId();
+//                                int id = item.getItemId();
                                 int idMovie = movie.getMovieId();
-                                String stringId = Integer.toString(id);
+                                String stringId = Integer.toString(idMovie);
                                 Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
                                 uri = uri.buildUpon().appendPath(stringId).build();
 
+                                DatabaseUtils.dumpCursor(mCursor);
+
                                 mContext.getContentResolver().delete(uri, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, new String[]{String.valueOf(idMovie)});
+
+                                mContext.getContentResolver().notifyChange(uri,null);
+
+
+
                             }
                         });
 
-                        builder.setNegativeButton("Não",null);
+                        builder.setNegativeButton("Não", null);
                         AlertDialog dialog = builder.create();
                         dialog.setTitle("Confirmar operação");
                         dialog.show();
 
-
-//                        int id = item.getItemId();
-//                        String stringId = Integer.toString(id);
-//                        Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
-//                        uri = uri.buildUpon().appendPath(stringId).build();
-//                        mContext.getContentResolver().delete(uri, null, null);
                         break;
                 }
                 return true;
