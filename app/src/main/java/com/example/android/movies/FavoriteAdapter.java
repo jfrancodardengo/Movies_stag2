@@ -3,9 +3,12 @@ package com.example.android.movies;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -49,9 +52,16 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
      * @param position The position of the data in the Cursor
      */
     @Override
-    public void onBindViewHolder(FavoriteViewHolder holder, int position) {
+    public void onBindViewHolder(final FavoriteViewHolder holder, int position) {
 
         final Movie movie = populateMovie(mCursor,position,holder);
+
+        /*FUNCTION TO DELETE*/
+//        int id = (int) holder.itemView.getTag();
+//        String stringId = Integer.toString(id);
+//        Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
+//        uri = uri.buildUpon().appendPath(stringId).build();
+//        mContext.getContentResolver().delete(uri,null,null);
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
@@ -124,7 +134,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     }
 
     // Inner class for creating ViewHolders
-    public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener{
         ImageView thumbnailFilm;
         TextView title, vote, release, synopsis;
 
@@ -141,6 +151,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             synopsis = (TextView) itemView.findViewById(R.id.tv_synopsis);
 
             itemView.setOnClickListener(this);
+
+            //Chamada para criar contexto de menu
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
@@ -151,5 +164,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         public void setItemClickListener(ItemClickListener itemClickListener) {
             this.itemClickListener = itemClickListener;
         }
+
+        //CREATED MENU CONTEXT
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.add(Menu.NONE, 1, Menu.NONE, "Deletar");
+        }
+
+
     }
 }

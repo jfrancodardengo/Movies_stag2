@@ -109,7 +109,30 @@ public class MoviesContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mMoviesDBHelper.getWritableDatabase();
+
+        int match = sUriMatcher.match(uri);
+
+        //rows deleted
+        int rowsDeleted=0;
+
+        if(null == selection){
+            selection = "1";
+        }
+
+        switch (match){
+            case MOVIES:
+                rowsDeleted = db.delete(MoviesContract.MoviesEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+        }
+
+        if (rowsDeleted != 0) {
+            // A task was deleted, set notification
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of tasks deleted
+        return rowsDeleted;
     }
 
     @Override

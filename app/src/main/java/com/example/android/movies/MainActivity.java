@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
@@ -13,8 +14,11 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.example.android.movies.data.MoviesContract;
@@ -64,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         jsonUrl = queryBundle.getString(QUERY_URL);
 
         getSupportLoaderManager().initLoader(LOADER, queryBundle, this);
+
+        //registrar o menu de contexto
+        registerForContextMenu(recyclerView);
+
     }
 
     @Override
@@ -88,11 +96,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             getSupportLoaderManager().restartLoader(LOADER, queryBundle, this);
 
             return true;
-        } else if(itemClick == R.id.action_favoritos){
-
-            Toast.makeText(context, "FAVORITOS CLICADO!", Toast.LENGTH_LONG).show();
+        } else if (itemClick == R.id.action_favoritos) {
             Cursor cursor = getQuery();
-            recyclerView.setAdapter(new FavoriteAdapter(context,cursor));
+            recyclerView.setAdapter(new FavoriteAdapter(context, cursor));
 
             return true;
 
@@ -107,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
-    public Cursor getQuery(){
+    public Cursor getQuery() {
         try {
             return getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
                     null,
@@ -120,6 +126,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             e.printStackTrace();
             return null;
         }
+    }
+
+    public int delete(){
+        return getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI,null,null);
     }
 
 
