@@ -1,6 +1,7 @@
 package com.example.android.movies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -49,37 +50,51 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
      */
     @Override
     public void onBindViewHolder(FavoriteViewHolder holder, int position) {
-        // Indices for the _id, description, and priority columns
-        int idIndex = mCursor.getColumnIndex(MoviesContract.MoviesEntry._ID);
-        int idMovie = mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE);
-        int nameIndex = mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE);
-        int voteIndex = mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_VOTE_MOVIE);
-        int imageIndex = mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE);
-        int synopsisIndex = mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE);
-        int releaseIndex = mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE);
 
-        mCursor.moveToPosition(position); // get to the right location in the cursor
+        final Movie movie = populateMovie(mCursor,position,holder);
 
-        // Determine the values of the wanted data
-        final int id = mCursor.getInt(idIndex);
-        int movie = mCursor.getInt(idMovie);
-        double mVoteAverage = mCursor.getDouble(voteIndex);
-        String mOriginalTitle = mCursor.getString(nameIndex);
-        String mImage = mCursor.getString(imageIndex);
-        String mSynopsis = mCursor.getString(synopsisIndex);
-        String mRealeaseDate = mCursor.getString(releaseIndex);
-
-        //Set values
-        holder.itemView.setTag(id);
-
-        Picasso.with(mContext).load(mImage).into(holder.thumbnailFilm);
-
-        holder.title.setText(mOriginalTitle);
-        holder.vote.setText(String.valueOf(mVoteAverage));
-        holder.release.setText(mRealeaseDate);
-        holder.synopsis.setText(mSynopsis);
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent i = new Intent(mContext, DetailActivity.class);
+                i.putExtra("movie", movie);
+                mContext.startActivity(i);
+            }
+        });
 
     }
+
+    Movie populateMovie(Cursor cursor, int position,FavoriteViewHolder holder){
+        try
+        {
+            cursor.moveToPosition(position);
+            int idMovie = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE);
+            int titleIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE);
+            int voteIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_VOTE_MOVIE);
+            int imageIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE);
+            int synopsisIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE);
+            int releaseIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE);
+
+
+            // Determine the values of the wanted data
+            int id = cursor.getInt(idMovie);
+            String mTitle = cursor.getString(titleIndex);
+            double mVote = cursor.getDouble(voteIndex);
+            String mImage = cursor.getString(imageIndex);
+            String mSynopsis = cursor.getString(synopsisIndex);
+            String mRelease = cursor.getString(releaseIndex);
+
+            Picasso.with(mContext).load(mImage).into(holder.thumbnailFilm);
+
+            return new Movie(id, mVote, mTitle, mImage, mSynopsis, mRelease);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     @Override
     public int getItemCount() {
@@ -109,9 +124,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     }
 
     // Inner class for creating ViewHolders
-    public class FavoriteViewHolder extends RecyclerView.ViewHolder {
+    public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView thumbnailFilm;
         TextView title, vote, release, synopsis;
+
+        ItemClickListener itemClickListener;
 
         public FavoriteViewHolder(View itemView) {
             super(itemView);
@@ -122,6 +139,17 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             vote = (TextView) itemView.findViewById(R.id.tv_vote);
             release = (TextView) itemView.findViewById(R.id.tv_release);
             synopsis = (TextView) itemView.findViewById(R.id.tv_synopsis);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            this.itemClickListener.onItemClick(this.getLayoutPosition());
+        }
+
+        public void setItemClickListener(ItemClickListener itemClickListener) {
+            this.itemClickListener = itemClickListener;
         }
     }
 }

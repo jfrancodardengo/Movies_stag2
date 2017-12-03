@@ -89,9 +89,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             return true;
         } else if(itemClick == R.id.action_favoritos){
+
             Toast.makeText(context, "FAVORITOS CLICADO!", Toast.LENGTH_LONG).show();
             Cursor cursor = getQuery();
             recyclerView.setAdapter(new FavoriteAdapter(context,cursor));
+
+            return true;
 
         }
         Bundle queryBundle = new Bundle();
