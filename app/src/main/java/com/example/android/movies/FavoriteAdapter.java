@@ -172,7 +172,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
                         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-//                                int id = item.getItemId();
                                 int idMovie = movie.getMovieId();
                                 String stringId = Integer.toString(idMovie);
                                 Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
@@ -182,6 +181,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
                                 mContext.getContentResolver().delete(uri, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, new String[]{String.valueOf(idMovie)});
 
+                                //verificar se o uri foi modificado
                                 mContext.getContentResolver().notifyChange(uri,null);
 
 
