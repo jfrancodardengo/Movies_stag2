@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getSupportLoaderManager().initLoader(LOADER, queryBundle, this);
 
         //registrar o menu de contexto
-        registerForContextMenu(recyclerView);
+//        registerForContextMenu(recyclerView);
 
     }
 

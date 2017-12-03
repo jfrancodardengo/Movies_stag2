@@ -30,6 +30,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     private Cursor mCursor;
     private Context mContext;
 
+    Movie movie;
+
     public FavoriteAdapter(Context mContext, Cursor mCursor) {
         this.mContext = mContext;
         this.mCursor = mCursor;
@@ -57,7 +59,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     @Override
     public void onBindViewHolder(final FavoriteViewHolder holder, int position) {
 
-        final Movie movie = populateMovie(mCursor, position, holder);
+        movie = populateMovie(mCursor, position, holder);
 
         /*FUNCTION TO DELETE*/
 //        int id = (int) holder.itemView.getTag();
@@ -174,6 +176,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 //            menu.add(Menu.NONE, 1, Menu.NONE, "Deletar");
         }
 
+
         //CREATED MENU ITEM
         private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -187,10 +190,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 int id = item.getItemId();
+                                int idMovie = movie.getMovieId();
                                 String stringId = Integer.toString(id);
                                 Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
                                 uri = uri.buildUpon().appendPath(stringId).build();
-                                mContext.getContentResolver().delete(uri, null, null);
+
+                                mContext.getContentResolver().delete(uri, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, new String[]{String.valueOf(idMovie)});
                             }
                         });
 

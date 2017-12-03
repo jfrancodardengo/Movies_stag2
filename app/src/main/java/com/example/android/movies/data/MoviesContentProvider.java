@@ -114,16 +114,20 @@ public class MoviesContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
 
         //rows deleted
-        int rowsDeleted=0;
-
-        if(null == selection){
-            selection = "1";
-        }
+        int rowsDeleted;
 
         switch (match){
-            case MOVIES:
-                rowsDeleted = db.delete(MoviesContract.MoviesEntry.TABLE_NAME,selection,selectionArgs);
+            case MOVIES_WITH_ID:
+                // Get the task ID from the URI path
+                String id = uri.getPathSegments().get(1);
+
+                // Use selections/selectionArgs to filter for this ID
+                rowsDeleted = db.delete(MoviesContract.MoviesEntry.TABLE_NAME,"_id=?",new String[]{id});
+
                 break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
         if (rowsDeleted != 0) {
