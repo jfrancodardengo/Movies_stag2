@@ -48,8 +48,29 @@ public class MoviesContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+        final SQLiteDatabase db = mMoviesDBHelper.getReadableDatabase();
 
-        return null;
+        int match = sUriMatcher.match(uri);
+
+        Cursor retCursor;
+
+        switch (match){
+            case MOVIES:
+                retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return retCursor;
     }
 
     @Nullable

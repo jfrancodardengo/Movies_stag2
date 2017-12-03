@@ -1,6 +1,7 @@
 package com.example.android.movies;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.LoaderManager;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.android.movies.data.MoviesContract;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -37,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     String imageURL = "http://image.tmdb.org/t/p/w342";
     Boolean parse;
     ArrayList<Movie> movies = new ArrayList<>();
-    ArrayList<Videos> videos = new ArrayList<>();
-    ArrayList<Reviews> reviews = new ArrayList<>();
 
     Movie movie;
 
@@ -87,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             getSupportLoaderManager().restartLoader(LOADER, queryBundle, this);
 
             return true;
+        } else if(itemClick == R.id.action_favoritos){
+            Toast.makeText(context, "FAVORITOS CLICADO!", Toast.LENGTH_LONG).show();
+            Cursor cursor = getQuery();
+            recyclerView.setAdapter(new FavoriteAdapter(context,cursor));
+
         }
         Bundle queryBundle = new Bundle();
         queryBundle.putString(QUERY_URL, jsonURLPopular);
@@ -97,6 +103,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         return super.onOptionsItemSelected(item);
     }
+
+    public Cursor getQuery(){
+        try {
+            return getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    MoviesContract.MoviesEntry.COLUMN_ID_MOVIE);
+
+        } catch (Exception e) {
+            Log.e(MainActivity.class.getSimpleName(), "Failed to asynchronously load data.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     @Override
     public Loader<String> onCreateLoader(int id, final Bundle args) {
@@ -142,10 +164,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-//    private void bindDataToAdapter() {
-//        // Bind adapter to recycler view object
-//        recyclerView.setAdapter(new ComplexRecyclerViewAdapter(movies,videos,reviews));
-//    }
 
     @Override
     public void onLoaderReset(Loader loader) {

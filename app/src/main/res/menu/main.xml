@@ -7,9 +7,16 @@
         android:orderInCategory="1"
         app:showAsAction="ifRoom"
         android:title="@string/acao_populares"/>
+
     <item
     android:id="@+id/action_votes"
     android:orderInCategory="1"
     app:showAsAction="ifRoom"
     android:title="@string/acao_votados"/>
+
+    <item
+        android:id="@+id/action_favoritos"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom"
+        android:title="@string/acao_favoritos"/>
 </menu>
