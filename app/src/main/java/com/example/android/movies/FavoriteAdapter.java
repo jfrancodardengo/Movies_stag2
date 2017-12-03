@@ -1,14 +1,17 @@
 package com.example.android.movies;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,13 +24,13 @@ import com.squareup.picasso.Picasso;
  * Created by CASA on 02/12/2017.
  */
 
-public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder>{
+public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> {
 
     // Class variables for the Cursor that holds task data and the Context
     private Cursor mCursor;
     private Context mContext;
 
-    public FavoriteAdapter(Context mContext,Cursor mCursor) {
+    public FavoriteAdapter(Context mContext, Cursor mCursor) {
         this.mContext = mContext;
         this.mCursor = mCursor;
     }
@@ -48,13 +51,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     /**
      * Called by the RecyclerView to display data at a specified position in the Cursor.
      *
-     * @param holder The ViewHolder to bind Cursor data to
+     * @param holder   The ViewHolder to bind Cursor data to
      * @param position The position of the data in the Cursor
      */
     @Override
     public void onBindViewHolder(final FavoriteViewHolder holder, int position) {
 
-        final Movie movie = populateMovie(mCursor,position,holder);
+        final Movie movie = populateMovie(mCursor, position, holder);
 
         /*FUNCTION TO DELETE*/
 //        int id = (int) holder.itemView.getTag();
@@ -74,9 +77,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     }
 
-    Movie populateMovie(Cursor cursor, int position,FavoriteViewHolder holder){
-        try
-        {
+    Movie populateMovie(Cursor cursor, int position, FavoriteViewHolder holder) {
+        try {
             cursor.moveToPosition(position);
             int idMovie = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE);
             int titleIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE);
@@ -97,9 +99,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             Picasso.with(mContext).load(mImage).into(holder.thumbnailFilm);
 
             return new Movie(id, mVote, mTitle, mImage, mSynopsis, mRelease);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -108,7 +108,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     @Override
     public int getItemCount() {
-        if(mCursor == null){
+        if (mCursor == null) {
             return 0;
         }
         return mCursor.getCount();
@@ -134,7 +134,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     }
 
     // Inner class for creating ViewHolders
-    public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener{
+    public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
         ImageView thumbnailFilm;
         TextView title, vote, release, synopsis;
 
@@ -168,9 +168,48 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         //CREATED MENU CONTEXT
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            menu.add(Menu.NONE, 1, Menu.NONE, "Deletar");
+            MenuItem Delete = menu.add(Menu.NONE, 1, Menu.NONE, "Excluir");
+            Delete.setOnMenuItemClickListener(onEditMenu);
+
+//            menu.add(Menu.NONE, 1, Menu.NONE, "Deletar");
         }
 
+        //CREATED MENU ITEM
+        private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final MenuItem item) {
 
+                switch (item.getItemId()) {
+                    case 1:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                        builder.setMessage("Confirma a exclusão?");
+                        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int id = item.getItemId();
+                                String stringId = Integer.toString(id);
+                                Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
+                                uri = uri.buildUpon().appendPath(stringId).build();
+                                mContext.getContentResolver().delete(uri, null, null);
+                            }
+                        });
+
+                        builder.setNegativeButton("Não",null);
+                        AlertDialog dialog = builder.create();
+                        dialog.setTitle("Confirmar operação");
+                        dialog.show();
+
+
+//                        int id = item.getItemId();
+//                        String stringId = Integer.toString(id);
+//                        Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
+//                        uri = uri.buildUpon().appendPath(stringId).build();
+//                        mContext.getContentResolver().delete(uri, null, null);
+                        break;
+                }
+                return true;
+            }
+        };
     }
 }
+
