@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity{
 
         setContentView(R.layout.activity_film);
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
 
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity{
 
         getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
 
-        getSupportLoaderManager().initLoader(LOADER_FAVORITE,null,dataResultLoaderFavorite);
+//        getSupportLoaderManager().initLoader(LOADER_FAVORITE,null,dataResultLoaderFavorite);
 
     }
 
@@ -98,13 +97,14 @@ public class MainActivity extends AppCompatActivity{
 
             return true;
         } else if (itemClick == R.id.action_favoritos) {
-            Cursor cursor = getQuery();
 
+            getSupportLoaderManager().initLoader(LOADER_FAVORITE,null,dataResultLoaderFavorite);
+//
 //            favoriteAdapter = new FavoriteAdapter(context, cursor);
-//            recyclerView.setAdapter(adapter);
+//            recyclerView.setAdapter(favoriteAdapter);
 
-            //atualizar adapter, mas não está funcionando
-            favoriteAdapter.swapCursor(cursor);
+//            atualizar adapter, mas não está funcionando
+//            favoriteAdapter.swapCursor(cursor);
 
             return true;
 
@@ -199,8 +199,13 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             data.moveToFirst();
+
+            data = getQuery();
+
             favoriteAdapter = new FavoriteAdapter(context,data);
             recyclerView.setAdapter(favoriteAdapter);
+
+//            favoriteAdapter.swapCursor(data);
         }
 
         @Override
