@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity{
 
         getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
 
-//        getSupportLoaderManager().initLoader(LOADER_FAVORITE,null,dataResultLoaderFavorite);
-
     }
 
     @Override
@@ -97,15 +95,7 @@ public class MainActivity extends AppCompatActivity{
 
             return true;
         } else if (itemClick == R.id.action_favoritos) {
-
             getSupportLoaderManager().initLoader(LOADER_FAVORITE,null,dataResultLoaderFavorite);
-//
-//            favoriteAdapter = new FavoriteAdapter(context, cursor);
-//            recyclerView.setAdapter(favoriteAdapter);
-
-//            atualizar adapter, mas não está funcionando
-//            favoriteAdapter.swapCursor(cursor);
-
             return true;
 
         }
@@ -200,12 +190,9 @@ public class MainActivity extends AppCompatActivity{
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             data.moveToFirst();
 
-            data = getQuery();
-
             favoriteAdapter = new FavoriteAdapter(context,data);
             recyclerView.setAdapter(favoriteAdapter);
 
-//            favoriteAdapter.swapCursor(data);
         }
 
         @Override
@@ -256,203 +243,3 @@ public class MainActivity extends AppCompatActivity{
     }
 
 }
-
-
-/*
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
-    Context context = MainActivity.this;
-    RecyclerView recyclerView;
-
-    public static final String URL_GENERIC = "https://api.themoviedb.org/3/movie/";
-
-    public static final String apiKey = com.example.android.movies.BuildConfig.MOVIES_KEY;
-    String jsonURLPopular = URL_GENERIC + "popular?api_key=" + apiKey + "&language=pt-BR";
-    String jsonURLTopRated = URL_GENERIC + "top_rated?api_key=" + apiKey + "&language=pt-BR";
-
-    String imageURL = "http://image.tmdb.org/t/p/w342";
-    Boolean parse;
-    ArrayList<Movie> movies = new ArrayList<>();
-
-    FavoriteAdapter adapter;
-
-    private static final int LOADER_DETAIL = 1;
-
-    private static final String QUERY_URL = "";
-
-    private String jsonUrl;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_film);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.setHasFixedSize(true);
-
-        Bundle queryBundle = new Bundle();
-        queryBundle.putString(QUERY_URL, jsonURLPopular);
-
-        jsonUrl = queryBundle.getString(QUERY_URL);
-
-        getSupportLoaderManager().initLoader(LOADER_DETAIL, queryBundle, this);
-
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemClick = item.getItemId();
-        if (itemClick == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        } else if (itemClick == R.id.action_votes) {
-
-            Bundle queryBundle = new Bundle();
-            queryBundle.putString(QUERY_URL, jsonURLTopRated);
-
-            jsonUrl = queryBundle.getString(QUERY_URL);
-
-            getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, this);
-
-            return true;
-        } else if (itemClick == R.id.action_favoritos) {
-            Cursor cursor = getQuery();
-
-            adapter = new FavoriteAdapter(context, cursor);
-            recyclerView.setAdapter(adapter);
-            //atualizar adapter, mas não está funcionando
-            adapter.swapCursor(cursor);
-
-            return true;
-
-        }
-        Bundle queryBundle = new Bundle();
-        queryBundle.putString(QUERY_URL, jsonURLPopular);
-
-        jsonUrl = queryBundle.getString(QUERY_URL);
-
-        getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, this);
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public Cursor getQuery() {
-        try {
-            return getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    MoviesContract.MoviesEntry.COLUMN_ID_MOVIE);
-
-        } catch (Exception e) {
-            Log.e(MainActivity.class.getSimpleName(), "Failed to asynchronously load data.");
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public int delete() {
-        return getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI, null, null);
-    }
-
-
-    @Override
-    public Loader<String> onCreateLoader(int id, final Bundle args) {
-        return new AsyncTaskLoader<String>(this) {
-
-            @Override
-            protected void onStartLoading() {
-                super.onStartLoading();
-                if (args == null) {
-                    return;
-                }
-
-                if (isConnected(context)) {
-                    Log.v("INTERNET: ", "CONNECTED");
-                } else {
-                    Log.v("INTERNET: ", "DISCONNECTED");
-                }
-
-                forceLoad();
-            }
-
-            @Override
-            public String loadInBackground() {
-                return download(jsonUrl);
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<String> loader, String data) {
-        if (data.startsWith("Error")) {
-            String error = data;
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
-        } else {
-            parse = new JSON(data, imageURL, movies).parse();
-
-            if (parse) {
-                recyclerView.setAdapter(new MovieAdapter(context, movies));
-//                bindDataToAdapter();
-            } else {
-                Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-
-    @Override
-    public void onLoaderReset(Loader loader) {
-
-    }
-
-    public String download(String url) {
-        Object connection = Connector.connect(url);
-        if (connection.toString().startsWith("Error")) {
-            return connection.toString();
-        }
-        try {
-            HttpURLConnection con = (HttpURLConnection) connection;
-            if (con.getResponseCode() == con.HTTP_OK) {
-                //GET INPUT FROM STREAM
-                InputStream is = new BufferedInputStream(con.getInputStream());
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                String line;
-                StringBuffer jsonData = new StringBuffer();
-                //READ
-                while ((line = br.readLine()) != null) {
-                    jsonData.append(line + "\n");
-                }
-                //CLOSE RESOURCES
-                br.close();
-                is.close();
-                //RETURN JSON
-                return jsonData.toString();
-            } else {
-                return "Error " + con.getResponseMessage();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Error " + e.getMessage();
-        }
-    }
-
-    public static boolean isConnected(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        if ((netInfo != null) && (netInfo.isConnectedOrConnecting()) && (netInfo.isAvailable())) {
-            return true;
-        }
-        return false;
-    }
-
-}
-*/
