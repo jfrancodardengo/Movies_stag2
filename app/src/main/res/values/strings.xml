@@ -3,4 +3,5 @@
     <string name="acao_populares">+Populares</string>
     <string name="acao_votados">+Votados</string>
     <string name="acao_favoritos">Favoritos</string>
+    <string name="action_share">Compartilhar</string>
 </resources>

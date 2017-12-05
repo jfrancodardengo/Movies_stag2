@@ -142,7 +142,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     Uri uri = context.getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, contentValues);
 
                     if (uri != null) {
-                        Toast.makeText(context, uri.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,"Filme " + movie.getOriginalTitle().toString() +" favoritado!", Toast.LENGTH_LONG).show();
                     }
                 }
             });

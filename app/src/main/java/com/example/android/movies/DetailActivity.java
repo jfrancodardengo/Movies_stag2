@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
@@ -16,6 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -184,4 +187,33 @@ public class DetailActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemClick = item.getItemId();
+        if (itemClick == R.id.action_share){
+            item.setIntent(createShareVideoIntent());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private Intent createShareVideoIntent() {
+        String urlVideo = "https://www.youtube.com/watch?v=" + videos.get(0).getKey();
+        Intent shareIntent = ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle(videos.get(0).getName())
+                .setText(urlVideo)
+                .getIntent();
+
+        if (shareIntent.resolveActivity(getPackageManager()) != null){
+            startActivity(shareIntent);
+        }
+        return shareIntent;
+    }
 }
