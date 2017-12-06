@@ -51,9 +51,11 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             case VIDEO:
                 return new VideoViewHolder(LayoutInflater.from(context).inflate(R.layout.model_video, parent, false));
             case REVIEWS:
-                return new ReviewViewHolder(LayoutInflater.from(context).inflate(R.layout.model_review, parent, false));
+                return new ReviewViewHolder(LayoutInflater.from(context).inflate(R.layout.item_article, parent, false));
+//                return new ReviewViewHolder(LayoutInflater.from(context).inflate(R.layout.model_review, parent, false));
             case MOVIE:
-                return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.model_overview, parent, false));
+                return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.detail_fragment, parent, false));
+//                return new MovieViewHolder(LayoutInflater.from(context).inflate(R.layout.model_overview, parent, false));
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }

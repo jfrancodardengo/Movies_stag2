@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -196,7 +197,10 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemClick = item.getItemId();
-        if (itemClick == R.id.action_share){
+        if (itemClick == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        } else if (itemClick == R.id.action_share){
             item.setIntent(createShareVideoIntent());
             return true;
         }
