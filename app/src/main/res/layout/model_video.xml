@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingTop="24dp">
 
 
     <TextView
@@ -17,6 +18,20 @@
         android:gravity="center_vertical"
         android:textSize="24sp"
         android:text="Trailers"/>
+
+    <!--<TextView-->
+        <!--android:id="@+id/header_video"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="@style/TextAppearance.AppCompat.Headline"-->
+        <!--android:text="Trailers"/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/name_video"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="@style/TextAppearance.AppCompat.Subhead"-->
+        <!--tools:text="O segredo"/>-->
 
     <TextView
         android:id="@+id/name_video"

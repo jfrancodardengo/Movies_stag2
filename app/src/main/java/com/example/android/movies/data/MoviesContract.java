@@ -27,6 +27,7 @@ public class MoviesContract {
 
 
         public static final String TABLE_NAME = "movies";
+        public static final String UNIQUE_ID = "id_movie_unique";
         public static final String COLUMN_ID_MOVIE = "idMovie";
         public static final String COLUMN_NAME_MOVIE = "originalTitle";
         public static final String COLUMN_VOTE_MOVIE = "voteAverage";
