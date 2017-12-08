@@ -81,6 +81,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             int titleIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE);
             int voteIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_VOTE_MOVIE);
             int imageIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE);
+            int imageBackgroundIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_IMAGE_BACKGROUND_MOVIE);
             int synopsisIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE);
             int releaseIndex = cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE);
 
@@ -90,12 +91,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             String mTitle = cursor.getString(titleIndex);
             double mVote = cursor.getDouble(voteIndex);
             String mImage = cursor.getString(imageIndex);
+            String mImageBack = cursor.getString(imageBackgroundIndex);
             String mSynopsis = cursor.getString(synopsisIndex);
             String mRelease = cursor.getString(releaseIndex);
 
             Picasso.with(mContext).load(mImage).into(holder.thumbnailFilm);
 
-            return new Movie(id, mVote, mTitle, mImage, mSynopsis, mRelease);
+            return new Movie(id, mVote, mTitle, mImage,mImageBack, mSynopsis, mRelease);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -122,7 +122,7 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void configureMovieHolder(MovieViewHolder vh, int position) {
         if (movie != null) {
-            Picasso.with(context).load(movie.getImage()).into(vh.thumbnailDetail);
+            Picasso.with(context).load(movie.getImageBack()).into(vh.thumbnailDetail);
 
             vh.title.setText(movie.getOriginalTitle());
             vh.vote.setText(String.valueOf(movie.getVoteAverage()));
@@ -138,12 +138,17 @@ public class ComplexRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     contentValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE, movie.getOriginalTitle());
                     contentValues.put(MoviesContract.MoviesEntry.COLUMN_VOTE_MOVIE, movie.getVoteAverage());
                     contentValues.put(MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE, movie.getImage());
+                    contentValues.put(MoviesContract.MoviesEntry.COLUMN_IMAGE_BACKGROUND_MOVIE, movie.getImageBack());
                     contentValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE, movie.getSynopsis());
                     contentValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE, movie.getRealeaseDate());
 
                     Uri uri = context.getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, contentValues);
 
+                    int idMovie = movie.getMovieId();
+
+
                     if (uri != null) {
+                        context.getContentResolver().update(uri,contentValues, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE,new String[]{String.valueOf(idMovie)});
                         Toast.makeText(context,"Filme " + movie.getOriginalTitle().toString() +" favoritado!", Toast.LENGTH_LONG).show();
                     }
                 }

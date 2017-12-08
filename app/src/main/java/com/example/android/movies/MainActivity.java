@@ -1,11 +1,14 @@
 package com.example.android.movies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
@@ -18,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.movies.data.MoviesContract;
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity{
     String jsonURLPopular = URL_GENERIC + "popular?api_key=" + apiKey + "&language=pt-BR";
     String jsonURLTopRated = URL_GENERIC + "top_rated?api_key=" + apiKey + "&language=pt-BR";
 
-    String imageURL = "http://image.tmdb.org/t/p/w342";
+    String imageURL = "http://image.tmdb.org/t/p/";
     Boolean parse;
     ArrayList<Movie> movies = new ArrayList<>();
 
@@ -109,20 +113,6 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    public Cursor getQuery() {
-        try {
-            return getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    MoviesContract.MoviesEntry.COLUMN_ID_MOVIE);
-
-        } catch (Exception e) {
-            Log.e(MainActivity.class.getSimpleName(), "Failed to asynchronously load data.");
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     private LoaderManager.LoaderCallbacks<String> dataResultLoaderDetail = new LoaderManager.LoaderCallbacks<String>() {
         @Override
@@ -156,7 +146,16 @@ public class MainActivity extends AppCompatActivity{
         public void onLoadFinished(Loader<String> loader, String data) {
             if (data.startsWith("Error")) {
                 String error = data;
-                Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.CoordinatorLayout),R.string.texto_offline,Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction(R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 0);
+                    }
+                });
+                snackbar.show();
+
             } else {
                 parse = new JSON(data, imageURL, movies).parse();
 

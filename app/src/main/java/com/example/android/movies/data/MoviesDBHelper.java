@@ -26,6 +26,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
                 MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE + " TEXT NOT NULL, " +
                 MoviesContract.MoviesEntry.COLUMN_VOTE_MOVIE + " DOUBLE NOT NULL, " +
                 MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE + " TEXT NOT NULL, " +
+                MoviesContract.MoviesEntry.COLUMN_IMAGE_BACKGROUND_MOVIE + " TEXT NOT NULL, " +
                 MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE + " TEXT NOT NULL, " +
                 MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE + " TEXT NOT NULL" +
                 ");";

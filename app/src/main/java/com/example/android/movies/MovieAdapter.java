@@ -26,10 +26,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     public MovieAdapter(Context context, ArrayList<Movie> movies) {
         this.context = context;
         this.movies = movies;
-        //In this part it's used for adjustment the image the same device size
-//        scale = context.getResources().getDisplayMetrics().density;
-//        width = context.getResources().getDisplayMetrics().widthPixels - (int)(14 * scale + 0.5f);
-//        height = (width / 16) * 9;
     }
 
     @Override
@@ -41,10 +37,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         final Movie movie = movies.get(position);
-
-//        holder.thumbnailFilm.getLayoutParams().height = height;
-//        holder.thumbnailFilm.getLayoutParams().width = width;
-
         Picasso.with(context).load(movie.getImage()).into(holder.thumbnailFilm);
 
         holder.setItemClickListener(new ItemClickListener() {
@@ -54,35 +46,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
                 Intent i = new Intent(context, DetailActivity.class);
                 i.putExtra("movie", movie);
                 context.startActivity(i);
-//                openDetailActivity(movie.getMovieId(),movie.getVoteAverage(), movie.getOriginalTitle(),
-//                        movie.getImage(), movie.getSynopsis(), movie.getRealeaseDate());
             }
         });
 
     }
 
-    private String formatDate(Date dateObject) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        return dateFormat.format(dateObject);
-    }
 
     @Override
     public int getItemCount() {
         return movies.size();
     }
-
-//    private void openDetailActivity(int mMovieId,double mVoteAverage, String mOriginalTitle, String mImage, String mSynopsis, String mRealeaseDate)
-//    {
-////        Intent i=new Intent(context,DetailActivity.class);
-//        Intent i=new Intent(context,OpenDetailActivity.class);
-//        i.putExtra("movies",movies);
-////        i.putExtra("MOVIE_KEY",mMovieId);
-////        i.putExtra("VOTE_KEY",mVoteAverage);
-////        i.putExtra("TITLE_KEY",mOriginalTitle);
-////        i.putExtra("IMAGE_KEY",mImage);
-////        i.putExtra("SYNOPSIS_KEY",mSynopsis);
-////        i.putExtra("RELEASE_KEY",mRealeaseDate);
-//        context.startActivity(i);
-//    }
 
 }

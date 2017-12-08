@@ -12,6 +12,7 @@ public class Movie implements Parcelable {
     private double mVoteAverage;
     private String mOriginalTitle;
     private String mImage;
+    String mImageBack;
     private String mSynopsis;
     private String mRealeaseDate;
 
@@ -28,11 +29,12 @@ public class Movie implements Parcelable {
      * @param dataLancamento é a data em que foi lançado o filme
      */
 
-    public Movie(int movieId, double avaliacaoVoto, String tituloOriginal, String imagem, String sinopse, String dataLancamento) {
+    public Movie(int movieId, double avaliacaoVoto, String tituloOriginal, String imagem, String imagemBack, String sinopse, String dataLancamento) {
         this.mMovieId = movieId;
         this.mVoteAverage = avaliacaoVoto;
         this.mOriginalTitle = tituloOriginal;
         this.mImage = imagem;
+        this.mImageBack = imagemBack;
         this.mSynopsis = sinopse;
         this.mRealeaseDate = dataLancamento;
     }
@@ -45,6 +47,7 @@ public class Movie implements Parcelable {
         this.mVoteAverage = in.readDouble();
         this.mOriginalTitle = in.readString();
         this.mImage = in.readString();
+        this.mImageBack = in.readString();
         this.mSynopsis = in.readString();
         this.mRealeaseDate = in.readString();
     }
@@ -120,6 +123,14 @@ public class Movie implements Parcelable {
         this.mMovieId = mMovieId;
     }
 
+    public String getImageBack() {
+        return mImageBack;
+    }
+
+    public void setImageBack(String mImageBack) {
+        this.mImageBack = mImageBack;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -135,6 +146,7 @@ public class Movie implements Parcelable {
         dest.writeDouble(mVoteAverage);
         dest.writeString(mOriginalTitle);
         dest.writeString(mImage);
+        dest.writeString(mImageBack);
         dest.writeString(mSynopsis);
         dest.writeString(mRealeaseDate);
     }

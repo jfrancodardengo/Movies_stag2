@@ -4,4 +4,17 @@
     <string name="acao_votados">+Votados</string>
     <string name="acao_favoritos">Favoritos</string>
     <string name="action_share">Compartilhar</string>
+
+    <!--Usado em MainActivity, no snackbar-->
+    <string name="texto_offline">Sem Internet?</string>
+    <string name="retry">TENTAR NOVAMENTE</string>
+
+    <!--Usado em item_article.xml-->
+    <string name="header_review">Reviews</string>
+
+    <!--Usar em detail_fragment.xml-->
+    <string name="titulo">Título</string>
+    <string name="avaliacao">Avaliação</string>
+    <string name="data">Data</string>
+    <string name="sinopse">Sinopse</string>
 </resources>
