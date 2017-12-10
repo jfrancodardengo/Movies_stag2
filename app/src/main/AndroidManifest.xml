@@ -22,20 +22,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".DetailActivity"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
+
+        <!--<activity-->
+            <!--android:name=".DetailActivity"-->
+            <!--android:parentActivityName=".MainActivity">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value=".MainActivity" />-->
+        <!--</activity>-->
 
         <provider
             android:name=".data.MoviesContentProvider"
             android:authorities="com.example.android.movies"
             android:exported="false" />
 
-        <activity android:name=".DetalheActivity"></activity>
+        <activity android:name=".DetalheActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>

@@ -24,18 +24,22 @@
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/titulo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
                 android:id="@+id/tv_vote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/avaliacao"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
             <TextView
                 android:id="@+id/tv_release"
+                android:text="@string/data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         </LinearLayout>
@@ -46,6 +50,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

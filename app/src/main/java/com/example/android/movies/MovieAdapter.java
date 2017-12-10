@@ -38,10 +38,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         final Movie movie = movies.get(position);
         Picasso.with(context).load(movie.getImage()).into(holder.thumbnailFilm);
 
+//        holder.setItemClickListener(new ItemClickListener() {
+//            @Override
+//            public void onItemClick(int position) {
+//                Intent i = new Intent(context, DetailActivity.class);
+//                i.putExtra("movie", movie);
+//                context.startActivity(i);
+//            }
+//        });
+
+
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent i = new Intent(context, DetailActivity.class);
+                Intent i = new Intent(context, DetalheActivity.class);
                 i.putExtra("movie", movie);
                 context.startActivity(i);
             }
