@@ -32,14 +32,14 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
 
     @Override
     public DetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.activity_detalhe, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.fragment_overview, parent, false);
         return new DetailViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(DetailViewHolder holder, int position) {
         if(movie != null){
-            Picasso.with(context).load(movie.getImageBack()).into(holder.thumbnailDetail);
+//            Picasso.with(context).load(movie.getImageBack()).into(holder.thumbnailDetail);
 
             movieViewHolder.title.setText(movie.getOriginalTitle());
             movieViewHolder.vote.setText(String.valueOf(movie.getVoteAverage()));

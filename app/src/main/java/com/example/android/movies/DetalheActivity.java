@@ -2,12 +2,12 @@ package com.example.android.movies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +31,17 @@ public class DetalheActivity extends AppCompatActivity {
 
     Movie movie = new Movie();
 
-    DetailAdapter adapter;
+    ImageView moviePoster;
+    FloatingActionButton fabButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe);
+
+        moviePoster = (ImageView)findViewById(R.id.img_thumbnail_film);
+        fabButton = (FloatingActionButton) findViewById(R.id.fab);
 
 //        toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -51,7 +58,14 @@ public class DetalheActivity extends AppCompatActivity {
         Intent i = this.getIntent();
         movie = i.getExtras().getParcelable("movie");
 
-        adapter = new DetailAdapter(context,movie);
+        Picasso.with(context).load(movie.getImageBack()).into(moviePoster);
+
+        fabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
     }
