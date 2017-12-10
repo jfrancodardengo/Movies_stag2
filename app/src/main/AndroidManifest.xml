@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.android.movies">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <!-- <uses-permission android:name="com.example.udacity.droidtermsexample.TERMS_READ" /> -->
+    <uses-permission android:name="com.example.android.movies.TERMS_READ" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_switch_video_black_24dp"
@@ -16,8 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".DetailActivity"
+        <activity
+            android:name=".DetailActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -25,16 +31,11 @@
         </activity>
 
         <provider
-            android:name="com.example.android.movies.data.MoviesContentProvider"
+            android:name=".data.MoviesContentProvider"
             android:authorities="com.example.android.movies"
-            android:exported="false"/>
+            android:exported="false" />
 
+        <activity android:name=".DetalheActivity"></activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <!--<uses-permission android:name="com.example.udacity.droidtermsexample.TERMS_READ" />-->
-    <uses-permission android:name="com.example.android.movies.TERMS_READ"/>
 
 </manifest>

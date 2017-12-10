@@ -20,8 +20,7 @@ import java.util.Date;
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     private Context context;
     private ArrayList<Movie> movies;
-    private float scale;
-    private int width, height;
+
 
     public MovieAdapter(Context context, ArrayList<Movie> movies) {
         this.context = context;
@@ -42,7 +41,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(int position) {
-//                Intent i=new Intent(context,OpenDetailActivity.class);
                 Intent i = new Intent(context, DetailActivity.class);
                 i.putExtra("movie", movie);
                 context.startActivity(i);
