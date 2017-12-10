@@ -32,7 +32,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<VideoViewHolder>  {
 
     @Override
     public void onBindViewHolder(VideoViewHolder vh1, int position) {
-
         final Videos video = videos.get(position);
 
         if (position == 1) {
