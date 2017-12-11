@@ -7,12 +7,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -55,6 +60,7 @@ public class TrailerFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View rootView = inflater.inflate(R.layout.activity_film, container, false);
+
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -120,5 +126,21 @@ public class TrailerFragment extends Fragment {
 
         }
     };
+
+
+    public Intent createShareVideoIntent() {
+        String urlVideo = "https://www.youtube.com/watch?v=" + videos.get(0).getKey();
+        Intent shareIntent = ShareCompat.IntentBuilder.from(getActivity())
+                .setType("text/plain")
+                .setChooserTitle(videos.get(0).getName())
+                .setText(urlVideo)
+                .getIntent();
+
+
+        if (shareIntent.resolveActivity(getActivity().getPackageManager()) != null){
+            startActivity(shareIntent);
+        }
+        return shareIntent;
+    }
 
 }

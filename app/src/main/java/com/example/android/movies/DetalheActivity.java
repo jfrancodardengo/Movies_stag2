@@ -1,13 +1,16 @@
 package com.example.android.movies;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.android.movies.data.MoviesContract;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,12 +29,12 @@ import java.util.List;
 
 public class DetalheActivity extends AppCompatActivity {
     Context context = DetalheActivity.this;
+    TrailerFragment trailerFragment = new TrailerFragment();
 
-    private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-    Movie movie = new Movie();
+    Movie movie;
 
     ImageView moviePoster;
     FloatingActionButton fabButton;
@@ -42,9 +47,6 @@ public class DetalheActivity extends AppCompatActivity {
 
         moviePoster = (ImageView)findViewById(R.id.img_thumbnail_film);
         fabButton = (FloatingActionButton) findViewById(R.id.fab);
-
-//        toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -63,10 +65,24 @@ public class DetalheActivity extends AppCompatActivity {
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //new content values
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, movie.getMovieId());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE, movie.getOriginalTitle());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_VOTE_MOVIE, movie.getVoteAverage());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE, movie.getImage());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_IMAGE_BACKGROUND_MOVIE, movie.getImageBack());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE, movie.getSynopsis());
+                contentValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE, movie.getRealeaseDate());
 
+                Uri uri = context.getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, contentValues);
+
+                if (uri != null) {
+//                        context.getContentResolver().update(uri,contentValues, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE,new String[]{String.valueOf(idMovie)});
+                    Toast.makeText(context,"Filme " + movie.getOriginalTitle().toString() +" favoritado!", Toast.LENGTH_LONG).show();
+                }
             }
         });
-
 
     }
 
@@ -82,12 +98,13 @@ public class DetalheActivity extends AppCompatActivity {
         if (itemClick == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
             return true;
-        } else if (itemClick == R.id.action_share){
-//            item.setIntent(createShareVideoIntent());
+        }else if (itemClick == R.id.action_share){
+            item.setIntent(trailerFragment.createShareVideoIntent());
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
