@@ -68,9 +68,6 @@ public class TrailerFragment extends Fragment {
         queryVideos.putString("url", mVideos);
         onActivityCreated(queryVideos);
 
-//        getSupportLoaderManager().initLoader(DATA_RESULT_LOADER_VIDEOS_ID, queryVideos, dataResultLoaderVideos);
-
-
         return rootView;
     }
 
@@ -110,7 +107,6 @@ public class TrailerFragment extends Fragment {
             } else {
                 videos = JSON.parseVideos(data);
                 adapter = new TrailerAdapter(getActivity(),videos);
-//                adapter.addTrailers(videos);
 
                 mRecyclerView.setAdapter(adapter);
 

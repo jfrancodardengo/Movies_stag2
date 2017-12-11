@@ -35,7 +35,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     public void onBindViewHolder(VideoViewHolder vh1, int position) {
         final Videos video = videos.get(position);
 
-
         if (position == 0) {
             vh1.header.setVisibility(View.VISIBLE);
         } else {
