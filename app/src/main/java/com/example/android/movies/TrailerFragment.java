@@ -110,7 +110,7 @@ public class TrailerFragment extends Fragment {
             } else {
                 videos = JSON.parseVideos(data);
                 adapter = new TrailerAdapter(getActivity(),videos);
-                adapter.addTrailers(videos);
+//                adapter.addTrailers(videos);
 
                 mRecyclerView.setAdapter(adapter);
 
