@@ -27,7 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetalheActivity extends AppCompatActivity {
+public class DetalheActivity extends AppCompatActivity implements TrailerFragment.Communication{
     Context context = DetalheActivity.this;
     TrailerFragment trailerFragment = new TrailerFragment();
 
@@ -38,6 +38,8 @@ public class DetalheActivity extends AppCompatActivity {
 
     ImageView moviePoster;
     FloatingActionButton fabButton;
+
+    List<Videos> trailers;
 
 
     @Override
@@ -99,7 +101,7 @@ public class DetalheActivity extends AppCompatActivity {
             NavUtils.navigateUpFromSameTask(this);
             return true;
         }else if (itemClick == R.id.action_share){
-            item.setIntent(trailerFragment.createShareVideoIntent());
+            item.setIntent(createShareVideoIntent());
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -108,10 +110,30 @@ public class DetalheActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new OverviewFragment(),"OVERVIEW");
-        adapter.addFragment(new TrailerFragment(), "TRAILERS");
-        adapter.addFragment(new ReviewFragment(), "OVERVIEWS");
+        adapter.addFragment(new OverviewFragment(),getString(R.string.overview));
+        adapter.addFragment(new TrailerFragment(), getString(R.string.trailers));
+        adapter.addFragment(new ReviewFragment(), getString(R.string.reviews));
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onArticleSelected(List<Videos> position) {
+        trailers = position;
+    }
+
+    public Intent createShareVideoIntent() {
+        String urlVideo = "https://www.youtube.com/watch?v=" + trailers.get(0).getKey();
+        Intent shareIntent = ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle(trailers.get(0).getName())
+                .setText(urlVideo)
+                .getIntent();
+
+
+        if (shareIntent.resolveActivity(getPackageManager()) != null){
+            startActivity(shareIntent);
+        }
+        return shareIntent;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

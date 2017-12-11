@@ -1,6 +1,7 @@
 package com.example.android.movies;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,27 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class TrailerFragment extends Fragment {
+
+    Communication listener;
+
+    public interface Communication{
+        public void onArticleSelected(List<Videos> position);
+    }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            listener = (Communication) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+
     MainActivity mainActivity = new MainActivity();
     private Movie movie;
 
@@ -112,6 +134,7 @@ public class TrailerFragment extends Fragment {
                 Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
             } else {
                 videos = JSON.parseVideos(data);
+                listener.onArticleSelected(videos);
                 adapter = new TrailerAdapter(getActivity(),videos);
 
                 mRecyclerView.setAdapter(adapter);
@@ -126,7 +149,6 @@ public class TrailerFragment extends Fragment {
 
         }
     };
-
 
     public Intent createShareVideoIntent() {
         String urlVideo = "https://www.youtube.com/watch?v=" + videos.get(0).getKey();
