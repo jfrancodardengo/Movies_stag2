@@ -36,7 +36,7 @@
             android:authorities="com.example.android.movies"
             android:exported="false" />
 
-        <activity android:name=".DetalheActivity"
+        <activity android:name=".UI.DetalheActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

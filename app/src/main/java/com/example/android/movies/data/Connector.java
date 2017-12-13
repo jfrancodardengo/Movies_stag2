@@ -1,4 +1,4 @@
-package com.example.android.movies;
+package com.example.android.movies.data;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

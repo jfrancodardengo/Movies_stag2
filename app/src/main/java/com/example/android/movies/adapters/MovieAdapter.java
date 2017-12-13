@@ -1,4 +1,4 @@
-package com.example.android.movies;
+package com.example.android.movies.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.movies.UI.DetalheActivity;
+import com.example.android.movies.ItemClickListener;
+import com.example.android.movies.R;
+import com.example.android.movies.data.Movie;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Guto on 15/10/2017.

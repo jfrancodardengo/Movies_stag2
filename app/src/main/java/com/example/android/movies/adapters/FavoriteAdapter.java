@@ -1,4 +1,4 @@
-package com.example.android.movies;
+package com.example.android.movies.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -15,10 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.movies.ItemClickListener;
+import com.example.android.movies.R;
+import com.example.android.movies.UI.DetalheActivity;
+import com.example.android.movies.data.Movie;
 import com.example.android.movies.data.MoviesContract;
 import com.squareup.picasso.Picasso;
 
@@ -66,7 +68,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent i = new Intent(mContext, DetailActivity.class);
+//                Intent i = new Intent(mContext, DetailActivity.class);
+                Intent i = new Intent(mContext, DetalheActivity.class);
                 i.putExtra("movie", movie);
                 mContext.startActivity(i);
             }

@@ -1,4 +1,4 @@
-package com.example.android.movies;
+package com.example.android.movies.data;
 
 import org.json.JSONArray;
 import org.json.JSONException;

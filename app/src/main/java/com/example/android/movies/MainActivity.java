@@ -24,6 +24,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.android.movies.adapters.FavoriteAdapter;
+import com.example.android.movies.adapters.MovieAdapter;
+import com.example.android.movies.data.Connector;
+import com.example.android.movies.data.JSON;
+import com.example.android.movies.data.Movie;
 import com.example.android.movies.data.MoviesContract;
 
 import java.io.BufferedInputStream;

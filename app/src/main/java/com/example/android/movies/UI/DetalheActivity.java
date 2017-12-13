@@ -1,4 +1,4 @@
-package com.example.android.movies;
+package com.example.android.movies.UI;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -14,14 +14,16 @@ import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.android.movies.R;
+import com.example.android.movies.data.Movie;
 import com.example.android.movies.data.MoviesContract;
+import com.example.android.movies.data.Videos;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

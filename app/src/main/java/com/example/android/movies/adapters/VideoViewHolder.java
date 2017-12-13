@@ -1,8 +1,11 @@
-package com.example.android.movies;
+package com.example.android.movies.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.android.movies.ItemClickListener;
+import com.example.android.movies.R;
 
 /**
  * Created by 2425115 on 27/11/2017.
