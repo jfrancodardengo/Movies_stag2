@@ -43,6 +43,7 @@
                 android:layout_below="@id/tv_title"
                 android:text=" /10"/>
 
+
             <TextView
                 android:id="@+id/tv_release"
                 android:layout_width="wrap_content"
