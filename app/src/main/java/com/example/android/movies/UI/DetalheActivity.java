@@ -3,6 +3,7 @@ package com.example.android.movies.UI;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class DetalheActivity extends AppCompatActivity implements TrailerFragment.Communication{
     Context context = DetalheActivity.this;
-    TrailerFragment trailerFragment = new TrailerFragment();
+    Boolean isFavorite;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -79,11 +80,21 @@ public class DetalheActivity extends AppCompatActivity implements TrailerFragmen
                 contentValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE, movie.getSynopsis());
                 contentValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE, movie.getRealeaseDate());
 
-                Uri uri = context.getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, contentValues);
+                Cursor favoritedMovie = getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
+                        null,
+                        MoviesContract.MoviesEntry.COLUMN_ID_MOVIE + "=" + movie.getMovieId(),
+                        null,
+                        null);
+                if (favoritedMovie.getCount() != 0) {
+                    isFavorite = true;
+                    Toast.makeText(context, "Filme já foi favoritado!", Toast.LENGTH_LONG).show();
+                }else {
+                    Uri uri = context.getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, contentValues);
 
-                if (uri != null) {
+                    if (uri != null) {
 //                        context.getContentResolver().update(uri,contentValues, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE,new String[]{String.valueOf(idMovie)});
-                    Toast.makeText(context,"Filme " + movie.getOriginalTitle().toString() +" favoritado!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Filme " + movie.getOriginalTitle().toString() + " favoritado!", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });

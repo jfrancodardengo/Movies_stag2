@@ -8,14 +8,11 @@ import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.movies.ItemClickListener;
 import com.example.android.movies.R;
@@ -34,7 +31,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     private Cursor mCursor;
     private Context mContext;
 
-    Movie movie;
+
 
     public FavoriteAdapter(Context mContext, Cursor mCursor) {
         this.mContext = mContext;
@@ -63,17 +60,17 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     @Override
     public void onBindViewHolder(final FavoriteViewHolder holder, int position) {
 
-        movie = populateMovie(mCursor, position, holder);
-
+        final Movie movie = populateMovie(mCursor, position, holder);
+        holder.setMovie(movie);
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(int position) {
-//                Intent i = new Intent(mContext, DetailActivity.class);
                 Intent i = new Intent(mContext, DetalheActivity.class);
                 i.putExtra("movie", movie);
                 mContext.startActivity(i);
             }
         });
+
 
     }
 
@@ -100,7 +97,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
             Picasso.with(mContext).load(mImage).into(holder.thumbnailFilm);
 
-            return new Movie(id, mVote, mTitle, mImage,mImageBack, mSynopsis, mRelease);
+            return new Movie(id, mVote, mTitle, mImage, mImageBack, mSynopsis, mRelease);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -126,26 +123,53 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
     }
 
     // Inner class for creating ViewHolders
-    public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+    public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView iconRemove;
         ImageView thumbnailFilm;
-        TextView title, vote, release, synopsis;
+        Movie movie;
 
         ItemClickListener itemClickListener;
 
         public FavoriteViewHolder(View itemView) {
             super(itemView);
-
             thumbnailFilm = (ImageView) itemView.findViewById(R.id.thumbnail_film);
+            iconRemove = (ImageView) itemView.findViewById(R.id.icon_remove);
+            iconRemove.setVisibility(View.VISIBLE);
 
-            title = (TextView) itemView.findViewById(R.id.tv_title);
-            vote = (TextView) itemView.findViewById(R.id.tv_vote);
-            release = (TextView) itemView.findViewById(R.id.tv_release);
-            synopsis = (TextView) itemView.findViewById(R.id.tv_synopsis);
+            iconRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setMessage("Confirma a exclusão?");
+                    builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int idMovie = movie.getMovieId();
+                            String stringId = Integer.toString(idMovie);
+                            Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
+                            uri = uri.buildUpon().appendPath(stringId).build();
+
+                            DatabaseUtils.dumpCursor(mCursor);
+
+                            mContext.getContentResolver().delete(uri, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, new String[]{String.valueOf(idMovie)});
+
+                            Toast.makeText(mContext, "Filme " + movie.getOriginalTitle().toString() + " deletado com sucesso!", Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+                    builder.setNegativeButton("Não", null);
+                    AlertDialog dialog = builder.create();
+                    dialog.setTitle("Confirmar operação");
+                    dialog.show();
+                }
+            });
+
 
             itemView.setOnClickListener(this);
+        }
 
-            //Chamada para criar contexto de menu
-            itemView.setOnCreateContextMenuListener(this);
+        public void setMovie(final Movie movie) {
+            this.movie = movie;
         }
 
         @Override
@@ -157,53 +181,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             this.itemClickListener = itemClickListener;
         }
 
-
-        //CREATED MENU CONTEXT
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            MenuItem Delete = menu.add(Menu.NONE, 1, Menu.NONE, "Excluir");
-            Delete.setOnMenuItemClickListener(onEditMenu);
-        }
-
-
-        //CREATED MENU ITEM
-        private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final MenuItem item) {
-                switch (item.getItemId()) {
-                    case 1:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setMessage("Confirma a exclusão?");
-                        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                int idMovie = movie.getMovieId();
-                                String stringId = Integer.toString(idMovie);
-                                Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
-                                uri = uri.buildUpon().appendPath(stringId).build();
-
-                                DatabaseUtils.dumpCursor(mCursor);
-
-                                mContext.getContentResolver().delete(uri, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, new String[]{String.valueOf(idMovie)});
-
-                                //verificar se o uri foi modificado
-                                mContext.getContentResolver().notifyChange(uri,null);
-
-
-
-                            }
-                        });
-
-                        builder.setNegativeButton("Não", null);
-                        AlertDialog dialog = builder.create();
-                        dialog.setTitle("Confirmar operação");
-                        dialog.show();
-
-                        break;
-                }
-                return true;
-            }
-        };
     }
 }
 
