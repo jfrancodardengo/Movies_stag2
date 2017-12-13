@@ -14,6 +14,8 @@ import android.widget.TextView;
 public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     ImageView thumbnailFilm;
     ImageView thumbnailDetail;
+
+    ImageView thumbnailDetailCard;
     TextView title, vote, release, synopsis;
 
     FloatingActionButton fabButton;
@@ -31,6 +33,8 @@ public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnC
         release = (TextView) itemView.findViewById(R.id.tv_release);
         synopsis = (TextView) itemView.findViewById(R.id.tv_synopsis);
         thumbnailDetail = (ImageView) itemView.findViewById(R.id.img_thumbnail_film);
+
+        thumbnailDetailCard = (ImageView) itemView.findViewById(R.id.img_thumbnail_cardview);
 
         fabButton = (FloatingActionButton) itemView.findViewById(R.id.fab);
 

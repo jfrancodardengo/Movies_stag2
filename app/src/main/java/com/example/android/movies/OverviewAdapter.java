@@ -38,6 +38,8 @@ public class OverviewAdapter extends RecyclerView.Adapter<MovieViewHolder> {
             vh.release.setText(movie.getRealeaseDate());
             vh.synopsis.setText(movie.getSynopsis());
 
+            Picasso.with(context).load(movie.getImage()).into(vh.thumbnailDetailCard);
+
 //            vh.fabButton.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
