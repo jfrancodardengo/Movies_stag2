@@ -17,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        tools:src="@drawable/it_a_coisa"/>
+        tools:src="@drawable/it_a_coisa"
+        android:contentDescription="Imagem de fundo"/>
 
         <ImageView
             android:id="@+id/icon_remove"
@@ -25,7 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:contentDescription="Botão de excluir filme favorito"/>
 
 </android.support.v7.widget.CardView>
 

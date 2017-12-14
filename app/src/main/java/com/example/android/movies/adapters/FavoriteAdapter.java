@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.example.android.movies.ItemClickListener;
 import com.example.android.movies.R;
-import com.example.android.movies.UI.DetalheActivity;
+import com.example.android.movies.UI.DetailActivity;
 import com.example.android.movies.data.Movie;
 import com.example.android.movies.data.MoviesContract;
 import com.squareup.picasso.Picasso;
@@ -65,7 +65,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent i = new Intent(mContext, DetalheActivity.class);
+                Intent i = new Intent(mContext, DetailActivity.class);
                 i.putExtra("movie", movie);
                 mContext.startActivity(i);
             }

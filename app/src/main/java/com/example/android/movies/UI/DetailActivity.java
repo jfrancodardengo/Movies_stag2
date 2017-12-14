@@ -30,8 +30,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetalheActivity extends AppCompatActivity implements TrailerFragment.Communication{
-    Context context = DetalheActivity.this;
+public class DetailActivity extends AppCompatActivity implements TrailerFragment.Communication{
+    Context context = DetailActivity.this;
     Boolean isFavorite;
 
     private TabLayout tabLayout;
@@ -48,7 +48,7 @@ public class DetalheActivity extends AppCompatActivity implements TrailerFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalhe);
+        setContentView(R.layout.activity_detail);
 
         moviePoster = (ImageView)findViewById(R.id.img_thumbnail_film);
         fabButton = (FloatingActionButton) findViewById(R.id.fab);

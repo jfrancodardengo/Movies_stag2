@@ -33,11 +33,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
     public void onBindViewHolder(ReviewViewHolder vh2, int position) {
         final Reviews review = reviews.get(position);
 
-        if (position == 0) {
-            vh2.header.setVisibility(View.VISIBLE);
-        } else {
-            vh2.header.setVisibility(View.INVISIBLE);
-        }
 
         if (review != null) {
             vh2.author.setText(review.getAuthor());

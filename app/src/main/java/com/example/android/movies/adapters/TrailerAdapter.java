@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.example.android.movies.ItemClickListener;
 import com.example.android.movies.R;
 import com.example.android.movies.data.Videos;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -37,15 +39,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     public void onBindViewHolder(VideoViewHolder vh1, int position) {
         final Videos video = videos.get(position);
 
-        if (position == 0) {
-            vh1.header.setVisibility(View.VISIBLE);
-        } else {
-            vh1.header.setVisibility(View.INVISIBLE);
-        }
-
             if (video != null) {
 
+                String urlImageVideo = "http://img.youtube.com/vi/" +video.getKey() + "/0.jpg";
+
                 vh1.name.setText(video.getName());
+                Picasso.with(context).load(urlImageVideo).into(vh1.imgThumbnailTrailer);
 
                 vh1.setItemClickListener(new ItemClickListener() {
                     @Override

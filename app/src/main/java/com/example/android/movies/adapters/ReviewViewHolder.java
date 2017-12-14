@@ -12,13 +12,12 @@ import com.example.android.movies.R;
 
 public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
-    TextView author, content, header;
+    TextView author, content;
 
     public ReviewViewHolder(View itemView) {
         super(itemView);
         author = (TextView) itemView.findViewById(R.id.author);
         content = (TextView) itemView.findViewById(R.id.content);
-        header = (TextView) itemView.findViewById(R.id.header_review);
     }
 
     public TextView getAuthor() {

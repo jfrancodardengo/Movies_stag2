@@ -10,6 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -87,7 +88,7 @@ public class TrailerFragment extends Fragment {
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         Intent i = getActivity().getIntent();
         movie = i.getExtras().getParcelable("movie");

@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.android.movies.UI.DetalheActivity;
+import com.example.android.movies.UI.DetailActivity;
 import com.example.android.movies.ItemClickListener;
 import com.example.android.movies.R;
 import com.example.android.movies.data.Movie;
@@ -53,7 +53,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent i = new Intent(context, DetalheActivity.class);
+                Intent i = new Intent(context, DetailActivity.class);
                 i.putExtra("movie", movie);
                 context.startActivity(i);
             }
