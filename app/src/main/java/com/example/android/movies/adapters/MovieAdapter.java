@@ -61,6 +61,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     }
 
+    public ArrayList<Movie> getMovies() {
+        return movies;
+    }
 
     @Override
     public int getItemCount() {

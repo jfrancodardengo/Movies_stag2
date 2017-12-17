@@ -117,7 +117,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
      * When data changes and a re-query occurs, this function swaps the old Cursor
      * with a newly updated Cursor (Cursor c) that is passed in.
      */
-    void swapCursor(Cursor newCursor) {
+    public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
         notifyDataSetChanged();
     }

@@ -38,8 +38,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     Context context = MainActivity.this;
     RecyclerView recyclerView;
 
@@ -59,9 +60,14 @@ public class MainActivity extends AppCompatActivity{
     private static final int LOADER_DETAIL = 1;
     private static final int LOADER_FAVORITE = 2;
 
+    private static final String MOVIES_EXTRAS = "movies_extras";
+    private static final String ORDER_EXTRAS = "order_extras";
+
     private static final String QUERY_URL = "";
 
     private String jsonUrl;
+    private String mSortBy;
+    private Cursor mCursor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,13 +78,53 @@ public class MainActivity extends AppCompatActivity{
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
 
-        Bundle queryDetail = new Bundle();
-        queryDetail.putString(QUERY_URL, jsonURLPopular);
+        mSortBy = getString(R.string.acao_populares);
 
-        jsonUrl = queryDetail.getString(QUERY_URL);
+        setAdapter(movies);
 
-        getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
+            Bundle queryDetail = new Bundle();
+            queryDetail.putString(QUERY_URL, jsonURLPopular);
 
+            jsonUrl = queryDetail.getString(QUERY_URL);
+
+            getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        movies = movieAdapter.getMovies();
+        if (movies != null && !movies.isEmpty()) {
+            outState.putParcelableArrayList(MOVIES_EXTRAS, movies);
+        }
+        outState.putString(ORDER_EXTRAS, mSortBy);
+
+        Log.v("MOVIES EXTRAS: ", MOVIES_EXTRAS);
+
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mSortBy = savedInstanceState.getString(ORDER_EXTRAS);
+        movies = savedInstanceState.getParcelableArrayList(MOVIES_EXTRAS);
+
+        Log.v("RESTORE: ", "Chegou aqui.");
+
+    }
+
+    private void setAdapter(ArrayList<Movie> movies) {
+
+        if (mSortBy.equals(getString(R.string.acao_populares)) || mSortBy.equals(getString(R.string.acao_votados))) {
+            movieAdapter = new MovieAdapter(context, movies);
+            recyclerView.setAdapter(movieAdapter);
+        } else {
+
+            favoriteAdapter = new FavoriteAdapter(context,mCursor);
+            recyclerView.setAdapter(favoriteAdapter);
+        }
     }
 
     @Override
@@ -95,6 +141,7 @@ public class MainActivity extends AppCompatActivity{
             return true;
         } else if (itemClick == R.id.action_votes) {
 
+            mSortBy = getString(R.string.acao_votados);
             Bundle queryBundle = new Bundle();
             queryBundle.putString(QUERY_URL, jsonURLTopRated);
 
@@ -104,16 +151,22 @@ public class MainActivity extends AppCompatActivity{
 
             return true;
         } else if (itemClick == R.id.action_favoritos) {
-            getSupportLoaderManager().initLoader(LOADER_FAVORITE,null,dataResultLoaderFavorite);
+
+            mSortBy = getString(R.string.acao_favoritos);
+            getSupportLoaderManager().initLoader(LOADER_FAVORITE, null, dataResultLoaderFavorite);
             return true;
 
+        } else if (itemClick == R.id.action_popular) {
+
+            mSortBy = getString(R.string.acao_populares);
+            Bundle queryBundle = new Bundle();
+            queryBundle.putString(QUERY_URL, jsonURLPopular);
+
+            jsonUrl = queryBundle.getString(QUERY_URL);
+
+            getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
+            return true;
         }
-        Bundle queryBundle = new Bundle();
-        queryBundle.putString(QUERY_URL, jsonURLPopular);
-
-        jsonUrl = queryBundle.getString(QUERY_URL);
-
-        getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
 
         return super.onOptionsItemSelected(item);
     }
@@ -152,7 +205,7 @@ public class MainActivity extends AppCompatActivity{
             if (data.startsWith("Error")) {
                 String error = data;
 
-                Snackbar snackbar = Snackbar.make(findViewById(R.id.CoordinatorLayout),R.string.texto_offline,Snackbar.LENGTH_INDEFINITE);
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.CoordinatorLayout), R.string.texto_offline, Snackbar.LENGTH_INDEFINITE);
                 snackbar.setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -186,16 +239,17 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Uri CONTENT_URI = MoviesContract.MoviesEntry.CONTENT_URI;
-            CursorLoader cursorLoader = new CursorLoader(context,CONTENT_URI,null,null,null,null);
+            CursorLoader cursorLoader = new CursorLoader(context, CONTENT_URI, null, null, null, null);
             return cursorLoader;
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             data.moveToFirst();
-
-            favoriteAdapter = new FavoriteAdapter(context,data);
-            recyclerView.setAdapter(favoriteAdapter);
+            mCursor = data;
+            favoriteAdapter.swapCursor(data);
+//            favoriteAdapter = new FavoriteAdapter(context, data);
+//            recyclerView.setAdapter(favoriteAdapter);
 
         }
 
