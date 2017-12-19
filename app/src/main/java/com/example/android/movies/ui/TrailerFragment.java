@@ -27,45 +27,22 @@ import com.example.android.movies.model.Videos;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.android.movies.utils.Utils.isConnected;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class TrailerFragment extends Fragment {
+    private static final int DATA_RESULT_LOADER_VIDEOS_ID = 1;
 
-    Communication listener;
-
-    public interface Communication{
-        public void onArticleSelected(List<Videos> position);
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        try {
-            listener = (Communication) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
-    }
-
-
+    private Communication listener;
     MainActivity mainActivity = new MainActivity();
     private Movie movie;
-
-    private static final int DATA_RESULT_LOADER_VIDEOS_ID = 1 ;
-
-    RecyclerView mRecyclerView;
-
-    TrailerAdapter adapter;
-
+    private RecyclerView mRecyclerView;
+    private TrailerAdapter adapter;
     private List<Videos> videos = new ArrayList<Videos>();
-
     private String mVideos;
-
 
     public TrailerFragment() {
         // Required empty public constructor
@@ -73,7 +50,11 @@ public class TrailerFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        getLoaderManager().initLoader(DATA_RESULT_LOADER_VIDEOS_ID, savedInstanceState, dataResultLoaderVideos);
+        if (isConnected(getActivity())) {
+            getLoaderManager().initLoader(DATA_RESULT_LOADER_VIDEOS_ID, savedInstanceState, dataResultLoaderVideos);
+        } else {
+            mainActivity.errorConnection();
+        }
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -83,15 +64,12 @@ public class TrailerFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View rootView = inflater.inflate(R.layout.activity_film, container, false);
-
-
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         Intent i = getActivity().getIntent();
-        movie = i.getExtras().getParcelable("movie");
-
-        mVideos = mainActivity.URL_GENERIC + movie.getMovieId() + "/videos?api_key=" + mainActivity.API_KEY + "&language=pt-BR";
+        movie = i.getExtras().getParcelable("PARAM_MOVIE");
+        mVideos = String.format("%s%d/videos?api_key=%s&language=pt-BR", mainActivity.URL_GENERIC, movie.getMovieId(), mainActivity.API_KEY);
 
         Bundle queryVideos = new Bundle();
         queryVideos.putString("url", mVideos);
@@ -112,12 +90,6 @@ public class TrailerFragment extends Fragment {
                         return;
                     }
 
-                    if (mainActivity.isConnected(getActivity())) {
-                        Log.v("INTERNET: ", "CONNECTED");
-                    } else {
-                        Log.v("INTERNET: ", "DISCONNECTED");
-                    }
-
                     forceLoad();
                 }
 
@@ -130,19 +102,12 @@ public class TrailerFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<String> loader, String data) {
-            if (data.startsWith("Error")) {
-                String error = data;
-                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-            } else {
-                videos = JSON.parseVideos(data);
-                listener.onArticleSelected(videos);
-                adapter = new TrailerAdapter(getActivity(),videos);
+            videos = JSON.parseVideos(data);
+            listener.onArticleSelected(videos);
+            adapter = new TrailerAdapter(getActivity(), videos);
+            mRecyclerView.setAdapter(adapter);
 
-                mRecyclerView.setAdapter(adapter);
-
-                Log.v("VIDEOS: ", String.valueOf(videos.toArray().length));
-
-            }
+            Log.v("VIDEOS: ", String.valueOf(videos.toArray().length));
         }
 
         @Override
@@ -152,18 +117,34 @@ public class TrailerFragment extends Fragment {
     };
 
     public Intent createShareVideoIntent() {
-        String urlVideo = "https://www.youtube.com/watch?v=" + videos.get(0).getKey();
+        String urlVideo = String.format("https://www.youtube.com/watch?v=%s", videos.get(0).getKey());
         Intent shareIntent = ShareCompat.IntentBuilder.from(getActivity())
                 .setType("text/plain")
                 .setChooserTitle(videos.get(0).getName())
                 .setText(urlVideo)
                 .getIntent();
 
-
-        if (shareIntent.resolveActivity(getActivity().getPackageManager()) != null){
+        if (shareIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(shareIntent);
         }
         return shareIntent;
+    }
+
+    public interface Communication {
+        public void onArticleSelected(List<Videos> position);
+    }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            listener = (Communication) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
     }
 
 }

@@ -25,22 +25,20 @@ import com.example.android.movies.model.Reviews;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.android.movies.utils.Utils.isConnected;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ReviewFragment extends Fragment {
-    MainActivity mainActivity = new MainActivity();
-    private Movie movie;
-
     private static final int DATA_RESULT_LOADER_REVIEWS_ID = 2;
 
-    RecyclerView mRecyclerView;
-
-    ReviewAdapter adapter;
-
+    MainActivity mainActivity = new MainActivity();
+    private Movie movie;
+    private RecyclerView mRecyclerView;
+    private ReviewAdapter adapter;
     private List<Reviews> reviews = new ArrayList<Reviews>();
-
     private String mReviews;
 
     public ReviewFragment() {
@@ -48,10 +46,13 @@ public class ReviewFragment extends Fragment {
     }
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        getLoaderManager().initLoader(DATA_RESULT_LOADER_REVIEWS_ID, savedInstanceState, dataResultLoaderReviews);
+        if (isConnected(getActivity())) {
+            getLoaderManager().initLoader(DATA_RESULT_LOADER_REVIEWS_ID, savedInstanceState, dataResultLoaderReviews);
+        } else {
+            mainActivity.errorConnection();
+        }
         super.onActivityCreated(savedInstanceState);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,9 +64,9 @@ public class ReviewFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         Intent i = getActivity().getIntent();
-        movie = i.getExtras().getParcelable("movie");
+        movie = i.getExtras().getParcelable("PARAM_MOVIE");
 
-        mReviews = mainActivity.URL_GENERIC + movie.getMovieId() + "/reviews?api_key=" + mainActivity.API_KEY + "&language=pt-BR";
+        mReviews = String.format("%s%d/reviews?api_key=%s&language=pt-BR", mainActivity.URL_GENERIC, movie.getMovieId(), mainActivity.API_KEY);
 
         Bundle queryReviews = new Bundle();
         queryReviews.putString("url", mReviews);
@@ -85,13 +86,6 @@ public class ReviewFragment extends Fragment {
                         Log.v("ARGS DETAIL: ", String.valueOf(args));
                         return;
                     }
-
-                    if (mainActivity.isConnected(getActivity())) {
-                        Log.v("INTERNET: ", "CONNECTED");
-                    } else {
-                        Log.v("INTERNET: ", "DISCONNECTED");
-                    }
-
                     forceLoad();
                 }
 
@@ -104,17 +98,11 @@ public class ReviewFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<String> loader, String data) {
-            if (data.startsWith("Error")) {
-                String error = data;
-                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-            } else {
-//                JSON.parseReviews(data);
-                reviews = JSON.parseReviews(data);
-                adapter = new ReviewAdapter(getActivity(),reviews);
-                mRecyclerView.setAdapter(adapter);
+            reviews = JSON.parseReviews(data);
+            adapter = new ReviewAdapter(getActivity(), reviews);
+            mRecyclerView.setAdapter(adapter);
 
-                Log.v("REVIEWS: ", String.valueOf(reviews.toArray().length));
-            }
+            Log.v("REVIEWS: ", String.valueOf(reviews.toArray().length));
         }
 
         @Override

@@ -2,9 +2,8 @@ package com.example.android.movies.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.movies.R;
-import com.example.android.movies.adapters.FavoriteAdapter;
 import com.example.android.movies.adapters.MovieAdapter;
 import com.example.android.movies.data.Connector;
 import com.example.android.movies.data.JSON;
@@ -40,6 +38,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
+import static com.example.android.movies.utils.Utils.isConnected;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String URL_GENERIC = "https://api.themoviedb.org/3/movie/";
@@ -52,15 +52,18 @@ public class MainActivity extends AppCompatActivity {
     private static final String MOVIES_EXTRAS = "MOVIES_EXTRAS";
     private static final String ORDER_EXTRAS = "ORDER_EXTRAS";
     private static final String QUERY_URL = "";
+    public static final String MY_PREFERENCES = "MY_PREFERENCES" ;
+    public static final String POPULAR = "POPULAR";
+    public static final String FAVORITOS = "FAVORITOS";
+    public static final String VOTADOS = "VOTADOS";
 
+    private SharedPreferences sharedpreferences;
     private Boolean parse;
     private ArrayList<Movie> movies = new ArrayList<>();
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
-
     private String jsonUrl;
     private String mSortBy;
-    private Cursor mCursor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,18 +73,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
-
         mSortBy = getString(R.string.acao_populares);
-
         setAdapter(movies);
 
         Bundle queryDetail = new Bundle();
         queryDetail.putString(QUERY_URL, JSON_URL_POPULAR);
-
         jsonUrl = queryDetail.getString(QUERY_URL);
+        if(isConnected(this)){
+            getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
+        }else{
+            errorConnection();
+        }
 
-        getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
-
+        sharedpreferences = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -109,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAdapter(ArrayList<Movie> movies) {
-            movieAdapter = new MovieAdapter(this, movies);
-            recyclerView.setAdapter(movieAdapter);
+        movieAdapter = new MovieAdapter(this, movies);
+        recyclerView.setAdapter(movieAdapter);
     }
 
     @Override
@@ -121,47 +125,51 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
         int itemClick = item.getItemId();
         if (itemClick == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
             return true;
         } else if (itemClick == R.id.action_votes) {
-
             mSortBy = getString(R.string.acao_votados);
+            editor.putString(VOTADOS,mSortBy);
             Bundle queryBundle = new Bundle();
             queryBundle.putString(QUERY_URL, JSON_URL_TOP_RATED);
-
             jsonUrl = queryBundle.getString(QUERY_URL);
-
-            getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
-
-            return true;
+            if(isConnected(this)) {
+                getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
+            }else{
+                errorConnection();
+            }
         } else if (itemClick == R.id.action_favoritos) {
-
             mSortBy = getString(R.string.acao_favoritos);
-            getSupportLoaderManager().initLoader(LOADER_FAVORITE, null, dataResultLoaderFavorite);
-            return true;
-
+            editor.putString(FAVORITOS,mSortBy);
+            if(isConnected(this)){
+                getSupportLoaderManager().initLoader(LOADER_FAVORITE, null, dataResultLoaderFavorite);
+            }else{
+                errorConnection();
+            }
         } else if (itemClick == R.id.action_popular) {
-
             mSortBy = getString(R.string.acao_populares);
+            editor.putString(POPULAR,mSortBy);
             Bundle queryBundle = new Bundle();
             queryBundle.putString(QUERY_URL, JSON_URL_POPULAR);
-
             jsonUrl = queryBundle.getString(QUERY_URL);
-
-            getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
-            return true;
+            if(isConnected(this)) {
+                getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
+            }else{
+                errorConnection();
+            }
         }
-
+        editor.commit();
+        Log.v("PREFERENCIA SALVA: ", editor.toString());
         return super.onOptionsItemSelected(item);
     }
-
 
     private LoaderManager.LoaderCallbacks<String> dataResultLoaderDetail = new LoaderManager.LoaderCallbacks<String>() {
         @Override
         public Loader<String> onCreateLoader(int id, final Bundle args) {
-            return new AsyncTaskLoader<String>(context) {
+            return new AsyncTaskLoader<String>(MainActivity.this) {
 
                 @Override
                 protected void onStartLoading() {
@@ -169,13 +177,6 @@ public class MainActivity extends AppCompatActivity {
                     if (args == null) {
                         return;
                     }
-
-                    if (isConnected(context)) {
-                        Log.v("INTERNET: ", "CONNECTED");
-                    } else {
-                        Log.v("INTERNET: ", "DISCONNECTED");
-                    }
-
                     forceLoad();
                 }
 
@@ -188,31 +189,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onLoadFinished(Loader<String> loader, String data) {
-            if (data.startsWith("Error")) {
-                String error = data;
-
-                Snackbar snackbar = Snackbar.make(findViewById(R.id.CoordinatorLayout), R.string.texto_offline, Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction(R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 0);
-                    }
-                });
-                snackbar.show();
-
+            parse = new JSON(data, IMAGE_URL, movies).parse();
+            if (parse) {
+                movieAdapter = new MovieAdapter(MainActivity.this, movies);
+                recyclerView.setAdapter(movieAdapter);
             } else {
-                parse = new JSON(data, IMAGE_URL, movies).parse();
-
-                if (parse) {
-                    movieAdapter = new MovieAdapter(context, movies);
-                    recyclerView.setAdapter(movieAdapter);
-//                bindDataToAdapter();
-                } else {
-                    Toast.makeText(context, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(MainActivity.this, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
             }
         }
-
 
         @Override
         public void onLoaderReset(Loader loader) {
@@ -225,17 +209,30 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Uri CONTENT_URI = MoviesContract.MoviesEntry.CONTENT_URI;
-            CursorLoader cursorLoader = new CursorLoader(context, CONTENT_URI, null, null, null, null);
+            CursorLoader cursorLoader = new CursorLoader(MainActivity.this, CONTENT_URI, null, null, null, null);
             return cursorLoader;
         }
 
         @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            data.moveToFirst();
-            mCursor = data;
-            favoriteAdapter.swapCursor(data);
-//            favoriteAdapter = new FavoriteAdapter(context, data);
-//            recyclerView.setAdapter(favoriteAdapter);
+        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+            cursor.moveToFirst();
+
+            movies.clear();
+            while (!cursor.isAfterLast()) {
+
+                Movie movie = new Movie();
+                movie.setMovieId(cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE)));
+                movie.setVoteAverage(cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE)));
+                movie.setOriginalTitle(cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE)));
+                movie.setImage(cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE)));
+                movie.setImageBack(cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_IMAGE_BACKGROUND_MOVIE)));
+                movie.setSynopsis(cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE)));
+                movie.setRealeaseDate(cursor.getString(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE)));
+                movies.add(movie);
+                cursor.moveToNext();
+            }
+            movieAdapter = new MovieAdapter(MainActivity.this, movies);
+            recyclerView.setAdapter(movieAdapter);
 
         }
 
@@ -247,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
     public String download(String url) {
         Object connection = Connector.connect(url);
-        if (connection.toString().startsWith("Error")) {
+        if (isConnected(this)) {
             return connection.toString();
         }
         try {
@@ -276,14 +273,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static boolean isConnected(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        if ((netInfo != null) && (netInfo.isConnectedOrConnecting()) && (netInfo.isAvailable())) {
-            return true;
-        }
-        return false;
+    public void errorConnection() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.CoordinatorLayout), R.string.texto_offline, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.retry, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 0);
+            }
+        });
+        snackbar.show();
     }
-
 }

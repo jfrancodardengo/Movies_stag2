@@ -11,7 +11,6 @@ import com.example.android.movies.R;
  */
 
 public class ReviewViewHolder extends RecyclerView.ViewHolder {
-
     public final TextView author;
     public final TextView content;
 

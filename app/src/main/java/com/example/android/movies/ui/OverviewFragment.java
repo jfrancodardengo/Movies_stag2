@@ -19,9 +19,9 @@ import com.example.android.movies.model.Movie;
  * A simple {@link Fragment} subclass.
  */
 public class OverviewFragment extends Fragment {
-    Movie movie = new Movie();
-    RecyclerView mRecyclerView;
-    OverviewAdapter adapter;
+    private Movie movie = new Movie();
+    private RecyclerView mRecyclerView;
+    private OverviewAdapter adapter;
 
     public OverviewFragment() {
         // Required empty public constructor
@@ -36,7 +36,7 @@ public class OverviewFragment extends Fragment {
 
         //get intent movie
         Intent i = getActivity().getIntent();
-        movie = i.getExtras().getParcelable("movie");
+        movie = i.getExtras().getParcelable("PARAM_MOVIE");
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
