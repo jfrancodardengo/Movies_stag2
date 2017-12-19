@@ -1,4 +1,4 @@
-package com.example.android.movies.adapters;
+package com.example.android.movies.holders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,7 +12,8 @@ import com.example.android.movies.R;
 
 public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
-    TextView author, content;
+    public final TextView author;
+    public final TextView content;
 
     public ReviewViewHolder(View itemView) {
         super(itemView);
@@ -20,19 +21,4 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
         content = (TextView) itemView.findViewById(R.id.content);
     }
 
-    public TextView getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(TextView author) {
-        this.author = author;
-    }
-
-    public TextView getContent() {
-        return content;
-    }
-
-    public void setContent(TextView content) {
-        this.content = content;
-    }
 }

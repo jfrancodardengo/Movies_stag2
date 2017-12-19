@@ -7,10 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.android.movies.UI.DetailActivity;
+import com.example.android.movies.ui.DetailActivity;
 import com.example.android.movies.ItemClickListener;
 import com.example.android.movies.R;
-import com.example.android.movies.data.Movie;
+import com.example.android.movies.model.Movie;
+import com.example.android.movies.holders.MovieViewHolder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -40,21 +41,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         final Movie movie = movies.get(position);
         Picasso.with(context).load(movie.getImage()).into(holder.thumbnailFilm);
 
-//        holder.setItemClickListener(new ItemClickListener() {
-//            @Override
-//            public void onItemClick(int position) {
-//                Intent i = new Intent(context, DetailActivity.class);
-//                i.putExtra("movie", movie);
-//                context.startActivity(i);
-//            }
-//        });
-
-
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 Intent i = new Intent(context, DetailActivity.class);
-                i.putExtra("movie", movie);
+                i.putExtra("PARAM_MOVIE", movie);
                 context.startActivity(i);
             }
         });

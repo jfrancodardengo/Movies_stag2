@@ -3,11 +3,11 @@ package com.example.android.movies.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.movies.R;
-import com.example.android.movies.data.Reviews;
+import com.example.android.movies.model.Reviews;
+import com.example.android.movies.holders.ReviewViewHolder;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
-    Context context;
+    private Context context;
     private List<Reviews> reviews;
 
     public ReviewAdapter(Context context, List<Reviews> reviews) {

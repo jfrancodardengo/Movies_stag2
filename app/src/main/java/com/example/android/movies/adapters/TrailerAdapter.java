@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.movies.ItemClickListener;
 import com.example.android.movies.R;
-import com.example.android.movies.data.Videos;
+import com.example.android.movies.model.Videos;
+import com.example.android.movies.holders.VideoViewHolder;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -21,8 +20,8 @@ import java.util.List;
  */
 
 public class TrailerAdapter extends RecyclerView.Adapter<VideoViewHolder> {
-    Context context;
-    List<Videos> videos;
+    private Context context;
+    private List<Videos> videos;
 
 
     public TrailerAdapter(Context context, List<Videos> videos) {
@@ -41,7 +40,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 
             if (video != null) {
 
-                String urlImageVideo = "http://img.youtube.com/vi/" +video.getKey() + "/0.jpg";
+                String urlImageVideo = String.format("http://img.youtube.com/vi/%s/0.jpg", video.getKey());
 
                 vh1.name.setText(video.getName());
                 Picasso.with(context).load(urlImageVideo).into(vh1.imgThumbnailTrailer);
@@ -49,7 +48,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                 vh1.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        Uri src = Uri.parse("https://www.youtube.com/watch?v=" + video.getKey());
+                        Uri src = Uri.parse(String.format("https://www.youtube.com/watch?v=%s", video.getKey()));
                         Intent webIntent = new Intent(Intent.ACTION_VIEW, src);
                         context.startActivity(webIntent);
                     }
@@ -63,8 +62,4 @@ public class TrailerAdapter extends RecyclerView.Adapter<VideoViewHolder> {
         return this.videos.size();
     }
 
-    public void addTrailers(List<Videos> videos) {
-        this.videos = videos;
-        notifyDataSetChanged();
-    }
 }

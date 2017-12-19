@@ -1,4 +1,4 @@
-package com.example.android.movies.adapters;
+package com.example.android.movies.holders;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -15,15 +15,18 @@ import com.example.android.movies.R;
  */
 
 public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    ImageView thumbnailFilm;
-    ImageView thumbnailDetail;
+    public final ImageView thumbnailFilm;
+    public final ImageView thumbnailDetail;
 
-    ImageView thumbnailDetailCard;
-    TextView title, vote, release, synopsis;
+    public final ImageView thumbnailDetailCard;
+    public final TextView title;
+    public final TextView vote;
+    public final TextView release;
+    public final TextView synopsis;
 
-    FloatingActionButton fabButton;
+    public final FloatingActionButton fabButton;
 
-    ItemClickListener itemClickListener;
+    private ItemClickListener itemClickListener;
 
 
     public MovieViewHolder(View itemView) {

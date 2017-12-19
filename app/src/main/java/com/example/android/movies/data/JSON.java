@@ -1,5 +1,9 @@
 package com.example.android.movies.data;
 
+import com.example.android.movies.model.Movie;
+import com.example.android.movies.model.Reviews;
+import com.example.android.movies.model.Videos;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.example.android.movies.UI;
+package com.example.android.movies.ui;
 
 
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.android.movies.R;
 import com.example.android.movies.adapters.OverviewAdapter;
-import com.example.android.movies.data.Movie;
+import com.example.android.movies.model.Movie;
 
 
 /**

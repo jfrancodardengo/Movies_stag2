@@ -1,4 +1,4 @@
-package com.example.android.movies.UI;
+package com.example.android.movies.ui;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,9 +22,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.android.movies.R;
-import com.example.android.movies.data.Movie;
+import com.example.android.movies.model.Movie;
 import com.example.android.movies.data.MoviesContract;
-import com.example.android.movies.data.Videos;
+import com.example.android.movies.model.Videos;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

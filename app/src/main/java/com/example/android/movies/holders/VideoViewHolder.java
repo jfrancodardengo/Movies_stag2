@@ -1,4 +1,4 @@
-package com.example.android.movies.adapters;
+package com.example.android.movies.holders;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +14,8 @@ import com.example.android.movies.R;
  */
 
 public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    TextView name;
-    ImageView imgThumbnailTrailer;
+    public final TextView name;
+    public final ImageView imgThumbnailTrailer;
 
     ItemClickListener itemClickListener;
 
@@ -33,13 +33,5 @@ public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
-    }
-
-    public TextView getName() {
-        return name;
-    }
-
-    public void setName(TextView name) {
-        this.name = name;
     }
 }

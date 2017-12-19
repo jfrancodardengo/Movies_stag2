@@ -1,4 +1,4 @@
-package com.example.android.movies;
+package com.example.android.movies.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,11 +24,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.android.movies.R;
 import com.example.android.movies.adapters.FavoriteAdapter;
 import com.example.android.movies.adapters.MovieAdapter;
 import com.example.android.movies.data.Connector;
 import com.example.android.movies.data.JSON;
-import com.example.android.movies.data.Movie;
+import com.example.android.movies.model.Movie;
 import com.example.android.movies.data.MoviesContract;
 
 import java.io.BufferedInputStream;
@@ -38,32 +39,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    Context context = MainActivity.this;
-    RecyclerView recyclerView;
 
     public static final String URL_GENERIC = "https://api.themoviedb.org/3/movie/";
-
-    public static final String apiKey = com.example.android.movies.BuildConfig.MOVIES_KEY;
-    String jsonURLPopular = URL_GENERIC + "popular?api_key=" + apiKey + "&language=pt-BR";
-    String jsonURLTopRated = URL_GENERIC + "top_rated?api_key=" + apiKey + "&language=pt-BR";
-
-    String imageURL = "http://image.tmdb.org/t/p/";
-    Boolean parse;
-    ArrayList<Movie> movies = new ArrayList<>();
-
-    FavoriteAdapter favoriteAdapter;
-    MovieAdapter movieAdapter;
-
+    public static final String API_KEY = com.example.android.movies.BuildConfig.MOVIES_KEY;
+    public static final String JSON_URL_POPULAR = String.format("%spopular?api_key=%s&language=pt-BR", URL_GENERIC, API_KEY);
+    public static final String JSON_URL_TOP_RATED = String.format("%stop_rated?api_key=%s&language=pt-BR", URL_GENERIC, API_KEY);
+    public static final String IMAGE_URL = "http://image.tmdb.org/t/p/";
     private static final int LOADER_DETAIL = 1;
     private static final int LOADER_FAVORITE = 2;
-
-    private static final String MOVIES_EXTRAS = "movies_extras";
-    private static final String ORDER_EXTRAS = "order_extras";
-
+    private static final String MOVIES_EXTRAS = "MOVIES_EXTRAS";
+    private static final String ORDER_EXTRAS = "ORDER_EXTRAS";
     private static final String QUERY_URL = "";
+
+    private Boolean parse;
+    private ArrayList<Movie> movies = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private MovieAdapter movieAdapter;
 
     private String jsonUrl;
     private String mSortBy;
@@ -82,12 +75,12 @@ public class MainActivity extends AppCompatActivity {
 
         setAdapter(movies);
 
-            Bundle queryDetail = new Bundle();
-            queryDetail.putString(QUERY_URL, jsonURLPopular);
+        Bundle queryDetail = new Bundle();
+        queryDetail.putString(QUERY_URL, JSON_URL_POPULAR);
 
-            jsonUrl = queryDetail.getString(QUERY_URL);
+        jsonUrl = queryDetail.getString(QUERY_URL);
 
-            getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
+        getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
 
     }
 
@@ -116,15 +109,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAdapter(ArrayList<Movie> movies) {
-
-        if (mSortBy.equals(getString(R.string.acao_populares)) || mSortBy.equals(getString(R.string.acao_votados))) {
-            movieAdapter = new MovieAdapter(context, movies);
+            movieAdapter = new MovieAdapter(this, movies);
             recyclerView.setAdapter(movieAdapter);
-        } else {
-
-            favoriteAdapter = new FavoriteAdapter(context,mCursor);
-            recyclerView.setAdapter(favoriteAdapter);
-        }
     }
 
     @Override
@@ -143,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
             mSortBy = getString(R.string.acao_votados);
             Bundle queryBundle = new Bundle();
-            queryBundle.putString(QUERY_URL, jsonURLTopRated);
+            queryBundle.putString(QUERY_URL, JSON_URL_TOP_RATED);
 
             jsonUrl = queryBundle.getString(QUERY_URL);
 
@@ -160,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
             mSortBy = getString(R.string.acao_populares);
             Bundle queryBundle = new Bundle();
-            queryBundle.putString(QUERY_URL, jsonURLPopular);
+            queryBundle.putString(QUERY_URL, JSON_URL_POPULAR);
 
             jsonUrl = queryBundle.getString(QUERY_URL);
 
@@ -215,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.show();
 
             } else {
-                parse = new JSON(data, imageURL, movies).parse();
+                parse = new JSON(data, IMAGE_URL, movies).parse();
 
                 if (parse) {
                     movieAdapter = new MovieAdapter(context, movies);

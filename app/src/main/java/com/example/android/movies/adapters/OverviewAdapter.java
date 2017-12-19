@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.example.android.movies.R;
-import com.example.android.movies.data.Movie;
+import com.example.android.movies.model.Movie;
+import com.example.android.movies.holders.MovieViewHolder;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -14,7 +15,7 @@ import com.squareup.picasso.Picasso;
  */
 
 public class OverviewAdapter extends RecyclerView.Adapter<MovieViewHolder> {
-    Context context;
+    private Context context;
     private Movie movie;
 
     public OverviewAdapter(Context context, Movie movie) {
@@ -37,30 +38,6 @@ public class OverviewAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
             Picasso.with(context).load(movie.getImage()).into(vh.thumbnailDetailCard);
 
-//            vh.fabButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    //new content values
-//                    ContentValues contentValues = new ContentValues();
-//                    contentValues.put(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, movie.getMovieId());
-//                    contentValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE, movie.getOriginalTitle());
-//                    contentValues.put(MoviesContract.MoviesEntry.COLUMN_VOTE_MOVIE, movie.getVoteAverage());
-//                    contentValues.put(MoviesContract.MoviesEntry.COLUMN_IMAGE_MOVIE, movie.getImage());
-//                    contentValues.put(MoviesContract.MoviesEntry.COLUMN_IMAGE_BACKGROUND_MOVIE, movie.getImageBack());
-//                    contentValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE, movie.getSynopsis());
-//                    contentValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE, movie.getRealeaseDate());
-//
-//                    Uri uri = context.getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, contentValues);
-//
-//                    int idMovie = movie.getMovieId();
-//
-//
-//                    if (uri != null) {
-////                        context.getContentResolver().update(uri,contentValues, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE,new String[]{String.valueOf(idMovie)});
-//                        Toast.makeText(context,"Filme " + movie.getOriginalTitle().toString() +" favoritado!", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            });
         }
     }
 
