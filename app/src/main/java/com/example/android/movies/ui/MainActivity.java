@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity{
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
-//        mSortBy = getString(R.string.acao_populares);
+        mSortBy = getString(R.string.acao_populares);
 //        setAdapter(movies);
 
         Bundle queryDetail = new Bundle();
