@@ -74,18 +74,17 @@ public class MainActivity extends AppCompatActivity{
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
 
-        Bundle queryDetail = new Bundle();
-        queryDetail.putString(QUERY_URL, JSON_URL_POPULAR);
-        jsonUrl = queryDetail.getString(QUERY_URL);
-        if(isConnected(this)){
-            getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
-        }else{
-            errorConnection();
-        }
-
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         mSortBy = sharedPreferences.getString(MY_PREFERENCES,getString(R.string.acao_populares));
         Log.v("PREFERENCIA: ", "RETORNANDO " + mSortBy);
+
+        if(mSortBy.equals(getString(R.string.acao_populares))){
+            loadPopular(true);
+        }else if(mSortBy.equals(getString(R.string.acao_votados))){
+            loadTopRated();
+        }else if(mSortBy.equals(getString(R.string.acao_favoritos))){
+            loadFavorite();
+        }
     }
 
     @Override
@@ -135,38 +134,17 @@ public class MainActivity extends AppCompatActivity{
             mSortBy = getString(R.string.acao_votados);
             editor.putString(MY_PREFERENCES,mSortBy);
             editor.commit();
-
-            Bundle queryBundle = new Bundle();
-            queryBundle.putString(QUERY_URL, JSON_URL_TOP_RATED);
-            jsonUrl = queryBundle.getString(QUERY_URL);
-            if(isConnected(this)) {
-                getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
-            }else{
-                errorConnection();
-            }
+            loadTopRated();
         } else if (itemClick == R.id.action_favoritos) {
             mSortBy = getString(R.string.acao_favoritos);
             editor.putString(MY_PREFERENCES,mSortBy);
             editor.commit();
-
-            if(isConnected(this)){
-                getSupportLoaderManager().initLoader(LOADER_FAVORITE, null, dataResultLoaderFavorite);
-            }else{
-                errorConnection();
-            }
+            loadFavorite();
         } else if (itemClick == R.id.action_popular) {
             mSortBy = getString(R.string.acao_populares);
             editor.putString(MY_PREFERENCES,mSortBy);
             editor.commit();
-
-            Bundle queryBundle = new Bundle();
-            queryBundle.putString(QUERY_URL, JSON_URL_POPULAR);
-            jsonUrl = queryBundle.getString(QUERY_URL);
-            if(isConnected(this)) {
-                getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
-            }else{
-                errorConnection();
-            }
+            loadPopular(false);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -289,6 +267,47 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         snackbar.show();
+    }
+
+    public void loadTopRated(){
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString(QUERY_URL, JSON_URL_TOP_RATED);
+        jsonUrl = queryBundle.getString(QUERY_URL);
+        if(isConnected(this)) {
+            getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
+        }else{
+            errorConnection();
+        }
+    }
+
+    public void loadPopular(boolean isInit){
+        if(isInit){
+            Bundle queryDetail = new Bundle();
+            queryDetail.putString(QUERY_URL, JSON_URL_POPULAR);
+            jsonUrl = queryDetail.getString(QUERY_URL);
+            if(isConnected(this)){
+                getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
+            }else{
+                errorConnection();
+            }
+        }else{
+            Bundle queryBundle = new Bundle();
+            queryBundle.putString(QUERY_URL, JSON_URL_POPULAR);
+            jsonUrl = queryBundle.getString(QUERY_URL);
+            if(isConnected(this)) {
+                getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
+            }else{
+                errorConnection();
+            }
+        }
+    }
+
+    public void loadFavorite(){
+        if(isConnected(this)){
+            getSupportLoaderManager().initLoader(LOADER_FAVORITE, null, dataResultLoaderFavorite);
+        }else{
+            errorConnection();
+        }
     }
 
 }
