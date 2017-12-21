@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements TrailerFragment.Communication {
-    Boolean isFavorite;
+//    private Boolean isFavorite;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Movie movie;
@@ -59,6 +59,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerFragment
         movie = i.getExtras().getParcelable("PARAM_MOVIE");
         Picasso.with(DetailActivity.this).load(movie.getImageBack()).into(moviePoster);
 
+
+        if(isFavorite(movie.getMovieId())){
+            fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this,R.drawable.ic_star_black_24dp));
+        }else{
+            fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this,R.drawable.ic_star_border_black_24dp));
+        }
+
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +85,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerFragment
                         null,
                         null);
                 if (favoritedMovie.getCount() != 0) {
-                    isFavorite = true;
+//                    isFavorite = true;
 
                     int idMovie = movie.getMovieId();
                     String stringId = Integer.toString(idMovie);
@@ -92,6 +99,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerFragment
                     getContentResolver().delete(uri, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, new String[]{String.valueOf(idMovie)});
 //                    Toast.makeText(DetailActivity.this, "Filme já foi favoritado!", Toast.LENGTH_LONG).show();
                 } else {
+//                    isFavorite = false;
                     Uri uri = DetailActivity.this.getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, contentValues);
 
                     if (uri != null) {
@@ -180,5 +188,14 @@ public class DetailActivity extends AppCompatActivity implements TrailerFragment
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    public boolean isFavorite(int movieId){
+        Cursor favoritedMovie = getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
+                null,
+                MoviesContract.MoviesEntry.COLUMN_ID_MOVIE + "=" + movieId,
+                null,
+                null);
+        return favoritedMovie.getCount() !=0;
     }
 }
