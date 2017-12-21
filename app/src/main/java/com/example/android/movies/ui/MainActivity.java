@@ -56,9 +56,6 @@ public class MainActivity extends AppCompatActivity{
     private static final String ORDER_EXTRAS = "ORDER_EXTRAS";
     private static final String QUERY_URL = "";
     public static final String MY_PREFERENCES = "MY_PREFERENCES" ;
-    public static final String POPULAR = "POPULAR";
-    public static final String FAVORITOS = "FAVORITOS";
-    public static final String VOTADOS = "VOTADOS";
 
     private Boolean parse;
     private ArrayList<Movie> movies = new ArrayList<>();
@@ -66,7 +63,6 @@ public class MainActivity extends AppCompatActivity{
     private MovieAdapter movieAdapter;
     private String jsonUrl;
     private String mSortBy;
-    private String mSavedPref;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -77,8 +73,6 @@ public class MainActivity extends AppCompatActivity{
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
-        mSortBy = getString(R.string.acao_populares);
-//        setAdapter(movies);
 
         Bundle queryDetail = new Bundle();
         queryDetail.putString(QUERY_URL, JSON_URL_POPULAR);
@@ -90,24 +84,8 @@ public class MainActivity extends AppCompatActivity{
         }
 
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-//        mSortBy = sharedPreferences.getString(MY_PREFERENCES,getString(R.string.acao_populares));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
-        Log.v("PREFERENCIA: ", "REMOVENDO");
-//        mSavedPref = sharedPreferences.getString(MY_PREFERENCES,mSortBy);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mSavedPref = sharedPreferences.getString(MY_PREFERENCES,mSortBy);
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(mListener);
-        Log.v("PREFERENCIA: ", "SALVANDO");
-
+        mSortBy = sharedPreferences.getString(MY_PREFERENCES,getString(R.string.acao_populares));
+        Log.v("PREFERENCIA: ", "RETORNANDO " + mSortBy);
     }
 
     @Override
@@ -148,15 +126,15 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         int itemClick = item.getItemId();
         if (itemClick == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
             return true;
         } else if (itemClick == R.id.action_votes) {
             mSortBy = getString(R.string.acao_votados);
-//            editor.putString(MY_PREFERENCES,mSortBy);
-//            editor.commit();
+            editor.putString(MY_PREFERENCES,mSortBy);
+            editor.commit();
 
             Bundle queryBundle = new Bundle();
             queryBundle.putString(QUERY_URL, JSON_URL_TOP_RATED);
@@ -168,8 +146,8 @@ public class MainActivity extends AppCompatActivity{
             }
         } else if (itemClick == R.id.action_favoritos) {
             mSortBy = getString(R.string.acao_favoritos);
-//            editor.putString(MY_PREFERENCES,mSortBy);
-//            editor.commit();
+            editor.putString(MY_PREFERENCES,mSortBy);
+            editor.commit();
 
             if(isConnected(this)){
                 getSupportLoaderManager().initLoader(LOADER_FAVORITE, null, dataResultLoaderFavorite);
@@ -178,8 +156,8 @@ public class MainActivity extends AppCompatActivity{
             }
         } else if (itemClick == R.id.action_popular) {
             mSortBy = getString(R.string.acao_populares);
-//            editor.putString(MY_PREFERENCES,mSortBy);
-//            editor.commit();
+            editor.putString(MY_PREFERENCES,mSortBy);
+            editor.commit();
 
             Bundle queryBundle = new Bundle();
             queryBundle.putString(QUERY_URL, JSON_URL_POPULAR);
@@ -209,6 +187,7 @@ public class MainActivity extends AppCompatActivity{
 
                 @Override
                 public String loadInBackground() {
+                    Log.v("AO EXECUTAR: ", jsonUrl);
                     return download(jsonUrl);
                 }
             };
@@ -217,6 +196,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void onLoadFinished(Loader<String> loader, String data) {
             parse = new JSON(data, IMAGE_URL, movies).parse();
+            Log.v("APÓS EXECUTAR: ",String.valueOf(parse));
             if (parse) {
                 movieAdapter = new MovieAdapter(MainActivity.this, movies);
                 recyclerView.setAdapter(movieAdapter);
@@ -310,47 +290,5 @@ public class MainActivity extends AppCompatActivity{
         });
         snackbar.show();
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        sharedPreferences.registerOnSharedPreferenceChangeListener(mListener);
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        sharedPreferences.unregisterOnSharedPreferenceChangeListener(mListener);
-//    }
-//
-    SharedPreferences.OnSharedPreferenceChangeListener mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            if(key.equals(mSortBy)){
-//                editor.putString(key,String.valueOf(getString(R.string.acao_populares)));
-//                editor.commit();
-//                Log.v("PREFERENCIA POPULAR: ", String.valueOf(getString(R.string.acao_populares)));
-//            }else if(key.equals(mSortBy)){
-//                editor.putString(key,String.valueOf(getString(R.string.acao_votados)));
-//                editor.commit();
-//                Log.v("PREFERENCIA VOTADOS: ", String.valueOf(getString(R.string.acao_votados)));
-//            }else if(key.equals(mSortBy)){
-//                editor.putString(key,String.valueOf(getString(R.string.acao_favoritos)));
-//                editor.commit();
-//                Log.v("PREFERENCIA FAVORITOS: ", String.valueOf(getString(R.string.acao_favoritos)));
-//            }
-            if(key.equals(String.valueOf(getString(R.string.acao_populares)))){
-                mSavedPref = sharedPreferences.getString(key,mSortBy);
-                Log.v("PREFERENCIA POPULAR: ", mSavedPref);
-            }else if(key.equals(String.valueOf(getString(R.string.acao_votados)))){
-                mSavedPref = sharedPreferences.getString(key,mSortBy);
-                Log.v("PREFERENCIA VOTADOS: ", mSavedPref);
-            }else if(key.equals(String.valueOf(getString(R.string.acao_favoritos)))){
-                mSavedPref = sharedPreferences.getString(key,mSortBy);
-                Log.v("PREFERENCIA FAVORITOS: ", mSavedPref);
-            }
-        }
-    };
 
 }
