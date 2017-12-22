@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -43,21 +40,20 @@ import java.util.ArrayList;
 
 import static com.example.android.movies.utils.Utils.isConnected;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     public static final String URL_GENERIC = "https://api.themoviedb.org/3/movie/";
     public static final String API_KEY = com.example.android.movies.BuildConfig.MOVIES_KEY;
-    public static final String JSON_URL_POPULAR = String.format("%spopular?api_key=%s&language=pt-BR", URL_GENERIC, API_KEY);
-    public static final String JSON_URL_TOP_RATED = String.format("%stop_rated?api_key=%s&language=pt-BR", URL_GENERIC, API_KEY);
+    private static final String JSON_URL_POPULAR = String.format("%spopular?api_key=%s&language=pt-BR", URL_GENERIC, API_KEY);
+    private static final String JSON_URL_TOP_RATED = String.format("%stop_rated?api_key=%s&language=pt-BR", URL_GENERIC, API_KEY);
     public static final String IMAGE_URL = "http://image.tmdb.org/t/p/";
     private static final int LOADER_DETAIL = 1;
     private static final int LOADER_FAVORITE = 2;
     private static final String MOVIES_EXTRAS = "MOVIES_EXTRAS";
     private static final String ORDER_EXTRAS = "ORDER_EXTRAS";
     private static final String QUERY_URL = "";
-    public static final String MY_PREFERENCES = "MY_PREFERENCES" ;
+    private static final String MY_PREFERENCES = "MY_PREFERENCES";
 
-    private Boolean parse;
     private ArrayList<Movie> movies = new ArrayList<>();
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
@@ -68,21 +64,19 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_film);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
 
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-        mSortBy = sharedPreferences.getString(MY_PREFERENCES,getString(R.string.acao_populares));
-        Log.v("PREFERENCIA: ", "RETORNANDO " + mSortBy);
+        mSortBy = sharedPreferences.getString(MY_PREFERENCES, getString(R.string.acao_populares));
 
-        if(mSortBy.equals(getString(R.string.acao_populares))){
+        if (mSortBy.equals(getString(R.string.acao_populares))) {
             loadPopular(true);
-        }else if(mSortBy.equals(getString(R.string.acao_votados))){
+        } else if (mSortBy.equals(getString(R.string.acao_votados))) {
             loadTopRated();
-        }else if(mSortBy.equals(getString(R.string.acao_favoritos))){
+        } else if (mSortBy.equals(getString(R.string.acao_favoritos))) {
             loadFavorite();
         }
     }
@@ -94,11 +88,7 @@ public class MainActivity extends AppCompatActivity{
             outState.putParcelableArrayList(MOVIES_EXTRAS, movies);
         }
         outState.putString(ORDER_EXTRAS, mSortBy);
-
-        Log.v("MOVIES EXTRAS: ", MOVIES_EXTRAS);
-
         super.onSaveInstanceState(outState);
-
     }
 
     @Override
@@ -107,14 +97,11 @@ public class MainActivity extends AppCompatActivity{
         mSortBy = savedInstanceState.getString(ORDER_EXTRAS);
         movies = savedInstanceState.getParcelableArrayList(MOVIES_EXTRAS);
         setAdapter(movies);
-        Log.v("RESTORE: ", "Chegou aqui.");
-
     }
 
     private void setAdapter(ArrayList<Movie> movies) {
         movieAdapter = new MovieAdapter(this, movies);
         recyclerView.setAdapter(movieAdapter);
-        Log.v("SET ADAPTER: ", "Passou aqui.");
     }
 
     @Override
@@ -132,24 +119,24 @@ public class MainActivity extends AppCompatActivity{
             return true;
         } else if (itemClick == R.id.action_votes) {
             mSortBy = getString(R.string.acao_votados);
-            editor.putString(MY_PREFERENCES,mSortBy);
-            editor.commit();
+            editor.putString(MY_PREFERENCES, mSortBy);
+            editor.apply();
             loadTopRated();
         } else if (itemClick == R.id.action_favoritos) {
             mSortBy = getString(R.string.acao_favoritos);
-            editor.putString(MY_PREFERENCES,mSortBy);
+            editor.putString(MY_PREFERENCES, mSortBy);
             editor.commit();
             loadFavorite();
         } else if (itemClick == R.id.action_popular) {
             mSortBy = getString(R.string.acao_populares);
-            editor.putString(MY_PREFERENCES,mSortBy);
+            editor.putString(MY_PREFERENCES, mSortBy);
             editor.commit();
             loadPopular(false);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private LoaderManager.LoaderCallbacks<String> dataResultLoaderDetail = new LoaderManager.LoaderCallbacks<String>() {
+    private final LoaderManager.LoaderCallbacks<String> dataResultLoaderDetail = new LoaderManager.LoaderCallbacks<String>() {
         @Override
         public Loader<String> onCreateLoader(int id, final Bundle args) {
             return new AsyncTaskLoader<String>(MainActivity.this) {
@@ -160,12 +147,12 @@ public class MainActivity extends AppCompatActivity{
                     if (args == null) {
                         return;
                     }
+
                     forceLoad();
                 }
 
                 @Override
                 public String loadInBackground() {
-                    Log.v("AO EXECUTAR: ", jsonUrl);
                     return download(jsonUrl);
                 }
             };
@@ -173,14 +160,14 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public void onLoadFinished(Loader<String> loader, String data) {
-            parse = new JSON(data, IMAGE_URL, movies).parse();
-            Log.v("APÓS EXECUTAR: ",String.valueOf(parse));
+            Boolean parse = new JSON(data, movies).parse();
             if (parse) {
                 movieAdapter = new MovieAdapter(MainActivity.this, movies);
                 recyclerView.setAdapter(movieAdapter);
             } else {
                 Toast.makeText(MainActivity.this, "Unable To Parse,Check Your Log output", Toast.LENGTH_LONG).show();
             }
+
         }
 
         @Override
@@ -189,13 +176,12 @@ public class MainActivity extends AppCompatActivity{
         }
     };
 
-    private LoaderManager.LoaderCallbacks<Cursor> dataResultLoaderFavorite = new LoaderManager.LoaderCallbacks<Cursor>() {
+    private final LoaderManager.LoaderCallbacks<Cursor> dataResultLoaderFavorite = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Uri CONTENT_URI = MoviesContract.MoviesEntry.CONTENT_URI;
-            CursorLoader cursorLoader = new CursorLoader(MainActivity.this, CONTENT_URI, null, null, null, null);
-            return cursorLoader;
+            return new CursorLoader(MainActivity.this, CONTENT_URI, null, null, null, null);
         }
 
         @Override
@@ -204,7 +190,6 @@ public class MainActivity extends AppCompatActivity{
 
             movies.clear();
             while (!cursor.isAfterLast()) {
-
                 Movie movie = new Movie();
                 movie.setMovieId(cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE)));
                 movie.setVoteAverage(cursor.getInt(cursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE)));
@@ -218,7 +203,6 @@ public class MainActivity extends AppCompatActivity{
             }
             movieAdapter = new MovieAdapter(MainActivity.this, movies);
             recyclerView.setAdapter(movieAdapter);
-
         }
 
         @Override
@@ -234,27 +218,24 @@ public class MainActivity extends AppCompatActivity{
         }
         try {
             HttpURLConnection con = (HttpURLConnection) connection;
-            if (con.getResponseCode() == con.HTTP_OK) {
-                //GET INPUT FROM STREAM
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream is = new BufferedInputStream(con.getInputStream());
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String line;
-                StringBuffer jsonData = new StringBuffer();
-                //READ
+                StringBuilder jsonData = new StringBuilder();
+
                 while ((line = br.readLine()) != null) {
-                    jsonData.append(line + "\n");
+                    jsonData.append(line).append("\n");
                 }
-                //CLOSE RESOURCES
                 br.close();
                 is.close();
-                //RETURN JSON
                 return jsonData.toString();
             } else {
-                return "Error " + con.getResponseMessage();
+                return String.format("Error %s", con.getResponseMessage());
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return "Error " + e.getMessage();
+            return String.format("Error %s", e.getMessage());
         }
     }
 
@@ -269,45 +250,44 @@ public class MainActivity extends AppCompatActivity{
         snackbar.show();
     }
 
-    public void loadTopRated(){
+    private void loadTopRated() {
         Bundle queryBundle = new Bundle();
         queryBundle.putString(QUERY_URL, JSON_URL_TOP_RATED);
         jsonUrl = queryBundle.getString(QUERY_URL);
-        if(isConnected(this)) {
+        if (isConnected(MainActivity.this)) {
             getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
-        }else{
+        } else {
             errorConnection();
         }
     }
 
-    public void loadPopular(boolean isInit){
-        if(isInit){
+    private void loadPopular(boolean isInit) {
+        if (isInit) {
             Bundle queryDetail = new Bundle();
             queryDetail.putString(QUERY_URL, JSON_URL_POPULAR);
             jsonUrl = queryDetail.getString(QUERY_URL);
-            if(isConnected(this)){
+            if (isConnected(MainActivity.this)) {
                 getSupportLoaderManager().initLoader(LOADER_DETAIL, queryDetail, dataResultLoaderDetail);
-            }else{
+            } else {
                 errorConnection();
             }
-        }else{
+        } else {
             Bundle queryBundle = new Bundle();
             queryBundle.putString(QUERY_URL, JSON_URL_POPULAR);
             jsonUrl = queryBundle.getString(QUERY_URL);
-            if(isConnected(this)) {
-                getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
-            }else{
-                errorConnection();
-            }
+//            if(isConnected(this)) {
+            getSupportLoaderManager().restartLoader(LOADER_DETAIL, queryBundle, dataResultLoaderDetail);
+//            }else{
+//                errorConnection();
+//            }
         }
     }
 
-    public void loadFavorite(){
-        if(isConnected(this)){
+    private void loadFavorite() {
+        if (isConnected(MainActivity.this)) {
             getSupportLoaderManager().initLoader(LOADER_FAVORITE, null, dataResultLoaderFavorite);
-        }else{
+        } else {
             errorConnection();
         }
     }
-
 }

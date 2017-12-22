@@ -3,6 +3,7 @@ package com.example.android.movies.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -14,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.android.movies.R;
 import com.example.android.movies.adapters.ReviewAdapter;
@@ -22,8 +22,8 @@ import com.example.android.movies.data.JSON;
 import com.example.android.movies.model.Movie;
 import com.example.android.movies.model.Reviews;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.example.android.movies.utils.Utils.isConnected;
 
@@ -33,16 +33,12 @@ import static com.example.android.movies.utils.Utils.isConnected;
  */
 public class ReviewFragment extends Fragment {
     private static final int DATA_RESULT_LOADER_REVIEWS_ID = 2;
+    private final MainActivity mainActivity = new MainActivity();
 
-    MainActivity mainActivity = new MainActivity();
-    private Movie movie;
     private RecyclerView mRecyclerView;
-    private ReviewAdapter adapter;
-    private List<Reviews> reviews = new ArrayList<Reviews>();
     private String mReviews;
 
     public ReviewFragment() {
-        // Required empty public constructor
     }
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -55,18 +51,18 @@ public class ReviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.activity_film, container, false);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        mRecyclerView = rootView.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         Intent i = getActivity().getIntent();
-        movie = i.getExtras().getParcelable("PARAM_MOVIE");
+        Movie movie = i.getExtras().getParcelable("PARAM_MOVIE");
 
-        mReviews = String.format("%s%d/reviews?api_key=%s&language=pt-BR", mainActivity.URL_GENERIC, movie.getMovieId(), mainActivity.API_KEY);
+        mReviews = String.format(Locale.getDefault(), "%s%d/reviews?api_key=%s&language=pt-BR", MainActivity.URL_GENERIC, movie.getMovieId(), MainActivity.API_KEY);
 
         Bundle queryReviews = new Bundle();
         queryReviews.putString("url", mReviews);
@@ -75,7 +71,7 @@ public class ReviewFragment extends Fragment {
         return rootView;
     }
 
-    private LoaderManager.LoaderCallbacks<String> dataResultLoaderReviews = new LoaderManager.LoaderCallbacks<String>() {
+    private final LoaderManager.LoaderCallbacks<String> dataResultLoaderReviews = new LoaderManager.LoaderCallbacks<String>() {
         @Override
         public Loader<String> onCreateLoader(int id, final Bundle args) {
             return new AsyncTaskLoader<String>(getActivity()) {
@@ -98,11 +94,9 @@ public class ReviewFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<String> loader, String data) {
-            reviews = JSON.parseReviews(data);
-            adapter = new ReviewAdapter(getActivity(), reviews);
+            List<Reviews> reviews = JSON.parseReviews(data);
+            ReviewAdapter adapter = new ReviewAdapter(getActivity(), reviews);
             mRecyclerView.setAdapter(adapter);
-
-            Log.v("REVIEWS: ", String.valueOf(reviews.toArray().length));
         }
 
         @Override

@@ -20,9 +20,8 @@ import java.util.List;
  */
 
 public class TrailerAdapter extends RecyclerView.Adapter<VideoViewHolder> {
-    private Context context;
-    private List<Videos> videos;
-
+    private final Context context;
+    private final List<Videos> videos;
 
     public TrailerAdapter(Context context, List<Videos> videos) {
         this.context = context;
@@ -38,22 +37,20 @@ public class TrailerAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     public void onBindViewHolder(VideoViewHolder vh1, int position) {
         final Videos video = videos.get(position);
 
-            if (video != null) {
+        if (video != null) {
+            String urlImageVideo = String.format("http://img.youtube.com/vi/%s/0.jpg", video.getKey());
+            vh1.name.setText(video.getName());
+            Picasso.with(context).load(urlImageVideo).into(vh1.imgThumbnailTrailer);
 
-                String urlImageVideo = String.format("http://img.youtube.com/vi/%s/0.jpg", video.getKey());
-
-                vh1.name.setText(video.getName());
-                Picasso.with(context).load(urlImageVideo).into(vh1.imgThumbnailTrailer);
-
-                vh1.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Uri src = Uri.parse(String.format("https://www.youtube.com/watch?v=%s", video.getKey()));
-                        Intent webIntent = new Intent(Intent.ACTION_VIEW, src);
-                        context.startActivity(webIntent);
-                    }
-                });
-            }
+            vh1.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onItemClick() {
+                    Uri src = Uri.parse(String.format("https://www.youtube.com/watch?v=%s", video.getKey()));
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW, src);
+                    context.startActivity(webIntent);
+                }
+            });
+        }
 
     }
 

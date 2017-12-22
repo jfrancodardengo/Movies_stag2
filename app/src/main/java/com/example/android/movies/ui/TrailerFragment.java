@@ -1,13 +1,13 @@
 package com.example.android.movies.ui;
 
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.android.movies.R;
 import com.example.android.movies.adapters.TrailerAdapter;
@@ -24,8 +23,8 @@ import com.example.android.movies.data.JSON;
 import com.example.android.movies.model.Movie;
 import com.example.android.movies.model.Videos;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.example.android.movies.utils.Utils.isConnected;
 
@@ -37,15 +36,11 @@ public class TrailerFragment extends Fragment {
     private static final int DATA_RESULT_LOADER_VIDEOS_ID = 1;
 
     private Communication listener;
-    MainActivity mainActivity = new MainActivity();
-    private Movie movie;
+    private final MainActivity mainActivity = new MainActivity();
     private RecyclerView mRecyclerView;
-    private TrailerAdapter adapter;
-    private List<Videos> videos = new ArrayList<Videos>();
     private String mVideos;
 
     public TrailerFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -59,17 +54,16 @@ public class TrailerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View rootView = inflater.inflate(R.layout.activity_film, container, false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        mRecyclerView = rootView.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         Intent i = getActivity().getIntent();
-        movie = i.getExtras().getParcelable("PARAM_MOVIE");
-        mVideos = String.format("%s%d/videos?api_key=%s&language=pt-BR", mainActivity.URL_GENERIC, movie.getMovieId(), mainActivity.API_KEY);
+        Movie movie = i.getExtras().getParcelable("PARAM_MOVIE");
+        mVideos = String.format(Locale.getDefault(), "%s%d/videos?api_key=%s&language=pt-BR", MainActivity.URL_GENERIC, movie.getMovieId(), MainActivity.API_KEY);
 
         Bundle queryVideos = new Bundle();
         queryVideos.putString("url", mVideos);
@@ -78,7 +72,7 @@ public class TrailerFragment extends Fragment {
         return rootView;
     }
 
-    private LoaderManager.LoaderCallbacks<String> dataResultLoaderVideos = new LoaderManager.LoaderCallbacks<String>() {
+    private final LoaderManager.LoaderCallbacks<String> dataResultLoaderVideos = new LoaderManager.LoaderCallbacks<String>() {
         @Override
         public Loader<String> onCreateLoader(int id, final Bundle args) {
             return new AsyncTaskLoader<String>(getActivity()) {
@@ -102,12 +96,10 @@ public class TrailerFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<String> loader, String data) {
-            videos = JSON.parseVideos(data);
+            List<Videos> videos = JSON.parseVideos(data);
             listener.onArticleSelected(videos);
-            adapter = new TrailerAdapter(getActivity(), videos);
+            TrailerAdapter adapter = new TrailerAdapter(getActivity(), videos);
             mRecyclerView.setAdapter(adapter);
-
-            Log.v("VIDEOS: ", String.valueOf(videos.toArray().length));
         }
 
         @Override
@@ -116,34 +108,19 @@ public class TrailerFragment extends Fragment {
         }
     };
 
-    public Intent createShareVideoIntent() {
-        String urlVideo = String.format("https://www.youtube.com/watch?v=%s", videos.get(0).getKey());
-        Intent shareIntent = ShareCompat.IntentBuilder.from(getActivity())
-                .setType("text/plain")
-                .setChooserTitle(videos.get(0).getName())
-                .setText(urlVideo)
-                .getIntent();
-
-        if (shareIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivity(shareIntent);
-        }
-        return shareIntent;
-    }
-
     public interface Communication {
-        public void onArticleSelected(List<Videos> position);
+        void onArticleSelected(List<Videos> position);
     }
 
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         try {
-            listener = (Communication) activity;
+            listener = (Communication) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
+            throw new ClassCastException(String.format("%s must implement OnHeadlineSelectedListener", context.toString()));
         }
     }
 

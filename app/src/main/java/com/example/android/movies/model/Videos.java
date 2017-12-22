@@ -11,18 +11,25 @@ public class Videos implements Parcelable {
     private String key;
     private String name;
 
-    public Videos(String key, String name) {
-        this.key = key;
-        this.name = name;
-    }
-
     public Videos() {
     }
 
-    public Videos(Parcel in) {
+    private Videos(Parcel in) {
         this.key = in.readString();
         this.name = in.readString();
     }
+
+    public static final Creator<Videos> CREATOR = new Creator<Videos>() {
+        @Override
+        public Videos createFromParcel(Parcel in) {
+            return new Videos(in);
+        }
+
+        @Override
+        public Videos[] newArray(int size) {
+            return new Videos[size];
+        }
+    };
 
     public String getKey() {
         return key;
@@ -51,19 +58,4 @@ public class Videos implements Parcelable {
         dest.writeString(name);
     }
 
-    public static final Parcelable.Creator<Videos> CREATOR = new Parcelable.Creator<Videos>() {
-
-        // This simply calls our new constructor (typically private) and
-        // passes along the unmarshalled `Parcel`, and then returns the new object!
-        @Override
-        public Videos createFromParcel(Parcel in) {
-            return new Videos(in);
-        }
-
-        // We just need to copy this and change the type to match our class.
-        @Override
-        public Videos[] newArray(int size) {
-            return new Videos[size];
-        }
-    };
 }

@@ -5,5 +5,5 @@ package com.example.android.movies;
  */
 
 public interface ItemClickListener {
-    void onItemClick(int position);
+    void onItemClick();
 }

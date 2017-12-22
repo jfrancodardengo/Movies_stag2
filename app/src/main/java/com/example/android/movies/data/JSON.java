@@ -12,42 +12,27 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Guto on 19/10/2017.
  */
 
 public class JSON {
-    private String jsonData;
-    private String imageURL;
+    private static final ArrayList<Reviews> reviews = new ArrayList<>();
+    private static final ArrayList<Videos> videos = new ArrayList<>();
+    private static final String BACK_SIZE_2 = "w1280";
+    private static final String POSTER_SIZE_3 = "w342";
+
+    private final String jsonData;
+    private final String imageURL;
     private ArrayList<Movie> movies = new ArrayList<>();
-    private static ArrayList<Reviews> reviews = new ArrayList<>();
-    private static ArrayList<Videos> videos = new ArrayList<>();
 
-    public static String BACK_SIZE_0 = "w300";
-    public static String BACK_SIZE_1 = "w780";
-    public static String BACK_SIZE_2 = "w1280";
-    public static String BACK_SIZE_3 = "original";
-
-    public static String POSTER_SIZE_0 = "w92";
-    public static String POSTER_SIZE_1 = "w154";
-    public static String POSTER_SIZE_2 = "w185";
-    public static String POSTER_SIZE_3 = "w342";
-    public static String POSTER_SIZE_4 = "w500";
-    public static String POSTER_SIZE_5 = "w780";
-    public static String POSTER_SIZE_6 = "original";
-
-    public JSON(String jsonData, String imageURL, ArrayList<Movie> movies) {
+    public JSON(String jsonData, ArrayList<Movie> movies) {
         this.jsonData = jsonData;
-        this.imageURL = imageURL;
+        this.imageURL = com.example.android.movies.ui.MainActivity.IMAGE_URL;
         this.movies = movies;
     }
-
-    public JSON(String jsonData, ArrayList<Videos> videos) {
-        this.jsonData = jsonData;
-        this.videos = videos;
-    }
-
 
     public Boolean parse() {
         try {
@@ -67,8 +52,8 @@ public class JSON {
                 String synopsis = jsonObject.getString("overview");
                 String release = jsonObject.getString("release_date");
 
-                String urlImagem = imageURL + POSTER_SIZE_3 + image;
-                String urlImagemBack = imageURL + BACK_SIZE_2 + imageBack;
+                String urlImagem = String.format("%s%s%s", imageURL, POSTER_SIZE_3, image);
+                String urlImagemBack = String.format("%s%s%s", imageURL, BACK_SIZE_2, imageBack);
 
                 String date = convertDate(release);
 
@@ -141,15 +126,11 @@ public class JSON {
         return videos;
     }
 
-    public String convertDate(String dateOriginal) throws ParseException {
-
-        //2017-11-15 - dateOriginal
-        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+    private String convertDate(String dateOriginal) throws ParseException {
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Date data = formato.parse(dateOriginal);
         formato.applyPattern("yyyy");
-        String destiny = formato.format(data);
-
-        return destiny;
+        return formato.format(data);
     }
 
 }

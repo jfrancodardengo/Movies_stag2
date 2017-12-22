@@ -21,9 +21,8 @@ import java.util.ArrayList;
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
-    private Context context;
-    private ArrayList<Movie> movies;
-
+    private final Context context;
+    public final ArrayList<Movie> movies;
 
     public MovieAdapter(Context context, ArrayList<Movie> movies) {
         this.context = context;
@@ -43,7 +42,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick() {
                 Intent i = new Intent(context, DetailActivity.class);
                 i.putExtra("PARAM_MOVIE", movie);
                 context.startActivity(i);
@@ -55,6 +54,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     public ArrayList<Movie> getMovies() {
         return movies;
     }
+
 
     @Override
     public int getItemCount() {

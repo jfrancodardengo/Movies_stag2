@@ -1,10 +1,8 @@
 package com.example.android.movies.ui;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -21,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.android.movies.R;
 import com.example.android.movies.model.Movie;
@@ -33,11 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements TrailerFragment.Communication {
-//    private Boolean isFavorite;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
     private Movie movie;
-    private ImageView moviePoster;
     private FloatingActionButton fabButton;
     private List<Videos> trailers;
 
@@ -46,30 +39,27 @@ public class DetailActivity extends AppCompatActivity implements TrailerFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        moviePoster = (ImageView) findViewById(R.id.img_thumbnail_film);
-        fabButton = (FloatingActionButton) findViewById(R.id.fab);
+        ImageView moviePoster = findViewById(R.id.img_thumbnail_film);
+        fabButton = findViewById(R.id.fab);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager viewPager = findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        //get intent movie
         Intent i = this.getIntent();
         movie = i.getExtras().getParcelable("PARAM_MOVIE");
         Picasso.with(DetailActivity.this).load(movie.getImageBack()).into(moviePoster);
 
-
-        if(isFavorite(movie.getMovieId())){
-            fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this,R.drawable.ic_star_black_24dp));
-        }else{
-            fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this,R.drawable.ic_star_border_black_24dp));
+        if (isFavorite(movie.getMovieId())) {
+            fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_star_black_24dp));
+        } else {
+            fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_star_border_black_24dp));
         }
 
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //new content values
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, movie.getMovieId());
                 contentValues.put(MoviesContract.MoviesEntry.COLUMN_NAME_MOVIE, movie.getOriginalTitle());
@@ -79,33 +69,19 @@ public class DetailActivity extends AppCompatActivity implements TrailerFragment
                 contentValues.put(MoviesContract.MoviesEntry.COLUMN_SYNOPSIS_MOVIE, movie.getSynopsis());
                 contentValues.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_MOVIE, movie.getRealeaseDate());
 
-                Cursor favoritedMovie = getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
-                        null,
-                        MoviesContract.MoviesEntry.COLUMN_ID_MOVIE + "=" + movie.getMovieId(),
-                        null,
-                        null);
-                if (favoritedMovie.getCount() != 0) {
-//                    isFavorite = true;
-
+                if (isFavorite(movie.getMovieId())) {
                     int idMovie = movie.getMovieId();
                     String stringId = Integer.toString(idMovie);
                     Uri uri = MoviesContract.MoviesEntry.CONTENT_URI;
                     uri = uri.buildUpon().appendPath(stringId).build();
 
-                    DatabaseUtils.dumpCursor(favoritedMovie);
-
-                    fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this,R.drawable.ic_star_border_black_24dp));
+                    fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_star_border_black_24dp));
 
                     getContentResolver().delete(uri, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE, new String[]{String.valueOf(idMovie)});
-//                    Toast.makeText(DetailActivity.this, "Filme já foi favoritado!", Toast.LENGTH_LONG).show();
                 } else {
-//                    isFavorite = false;
+                    fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_star_black_24dp));
                     Uri uri = DetailActivity.this.getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, contentValues);
-
                     if (uri != null) {
-                        fabButton.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this,R.drawable.ic_star_black_24dp));
-//                        context.getContentResolver().update(uri,contentValues, MoviesContract.MoviesEntry.COLUMN_ID_MOVIE,new String[]{String.valueOf(idMovie)});
-//                        Toast.makeText(DetailActivity.this, String.format("Filme %s favoritado!", movie.getOriginalTitle().toString()), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -145,14 +121,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerFragment
         trailers = position;
     }
 
-    public Intent createShareVideoIntent() {
+    private Intent createShareVideoIntent() {
         String urlVideo = String.format("https://www.youtube.com/watch?v=%s", trailers.get(0).getKey());
         Intent shareIntent = ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
                 .setChooserTitle(trailers.get(0).getName())
                 .setText(urlVideo)
                 .getIntent();
-
 
         if (shareIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(shareIntent);
@@ -190,12 +165,12 @@ public class DetailActivity extends AppCompatActivity implements TrailerFragment
         }
     }
 
-    public boolean isFavorite(int movieId){
+    private boolean isFavorite(int movieId) {
         Cursor favoritedMovie = getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
                 null,
                 MoviesContract.MoviesEntry.COLUMN_ID_MOVIE + "=" + movieId,
                 null,
                 null);
-        return favoritedMovie.getCount() !=0;
+        return favoritedMovie.getCount() != 0;
     }
 }

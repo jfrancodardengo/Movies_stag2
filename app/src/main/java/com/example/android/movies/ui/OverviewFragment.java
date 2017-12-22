@@ -3,6 +3,7 @@ package com.example.android.movies.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,29 +20,24 @@ import com.example.android.movies.model.Movie;
  * A simple {@link Fragment} subclass.
  */
 public class OverviewFragment extends Fragment {
-    private Movie movie = new Movie();
-    private RecyclerView mRecyclerView;
-    private OverviewAdapter adapter;
 
     public OverviewFragment() {
-        // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.activity_film, container, false);
 
         //get intent movie
         Intent i = getActivity().getIntent();
-        movie = i.getExtras().getParcelable("PARAM_MOVIE");
+        Movie movie = i.getExtras().getParcelable("PARAM_MOVIE");
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        RecyclerView mRecyclerView = rootView.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new OverviewAdapter(getActivity(),movie);
+        OverviewAdapter adapter = new OverviewAdapter(getActivity(), movie);
         mRecyclerView.setAdapter(adapter);
 
         return rootView;

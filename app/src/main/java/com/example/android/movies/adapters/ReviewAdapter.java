@@ -16,8 +16,8 @@ import java.util.List;
  */
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
-    private Context context;
-    private List<Reviews> reviews;
+    private final Context context;
+    private final List<Reviews> reviews;
 
     public ReviewAdapter(Context context, List<Reviews> reviews) {
         this.context = context;
@@ -32,7 +32,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
     @Override
     public void onBindViewHolder(ReviewViewHolder vh2, int position) {
         final Reviews review = reviews.get(position);
-
 
         if (review != null) {
             vh2.author.setText(review.getAuthor());

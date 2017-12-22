@@ -15,8 +15,8 @@ import com.squareup.picasso.Picasso;
  */
 
 public class OverviewAdapter extends RecyclerView.Adapter<MovieViewHolder> {
-    private Context context;
-    private Movie movie;
+    private final Context context;
+    private final Movie movie;
 
     public OverviewAdapter(Context context, Movie movie) {
         this.context = context;
@@ -35,9 +35,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<MovieViewHolder> {
             vh.vote.setText(String.valueOf(movie.getVoteAverage()));
             vh.release.setText(movie.getRealeaseDate());
             vh.synopsis.setText(movie.getSynopsis());
-
             Picasso.with(context).load(movie.getImage()).into(vh.thumbnailDetailCard);
-
         }
     }
 

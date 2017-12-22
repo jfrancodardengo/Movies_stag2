@@ -18,23 +18,10 @@ import android.support.annotation.Nullable;
 
 public class MoviesContentProvider extends ContentProvider {
 
-    // It's convention to use 100, 200, 300, etc for directories,
-    // and related ints (101, 102, ..) for items in that directory.
-    public static final int MOVIES = 100;
-    public static final int MOVIES_WITH_ID = 101;
+    private static final int MOVIES = 100;
+    private static final int MOVIES_WITH_ID = 101;
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
 
-    public static final UriMatcher sUriMatcher = buildUriMatcher();
-
-    public static UriMatcher buildUriMatcher() {
-        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_MOVIES, MOVIES);
-        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_MOVIES + "/#", MOVIES_WITH_ID);
-
-        return uriMatcher;
-    }
-
-    // Member variable for a MoviesDbHelper that's initialized in the onCreate() method
     private MoviesDBHelper mMoviesDBHelper;
 
     @Override
@@ -49,9 +36,7 @@ public class MoviesContentProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         final SQLiteDatabase db = mMoviesDBHelper.getReadableDatabase();
-
         int match = sUriMatcher.match(uri);
-
         Cursor retCursor;
 
         switch (match) {
@@ -65,11 +50,10 @@ public class MoviesContentProvider extends ContentProvider {
                         sortOrder);
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+                throw new UnsupportedOperationException(String.format("Unknown uri: %s", uri));
         }
 
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
-
         return retCursor;
     }
 
@@ -83,7 +67,6 @@ public class MoviesContentProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         final SQLiteDatabase db = mMoviesDBHelper.getWritableDatabase();
-
         int match = sUriMatcher.match(uri);
         Uri returnUri;
 
@@ -94,76 +77,64 @@ public class MoviesContentProvider extends ContentProvider {
                     //success
                     returnUri = ContentUris.withAppendedId(MoviesContract.MoviesEntry.CONTENT_URI, id);
                 } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                    throw new android.database.SQLException(String.format("Failed to insert row into %s", uri));
                 }
-
                 break;
 
             default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+                throw new UnsupportedOperationException(String.format("Unknown uri: %s", uri));
         }
         getContext().getContentResolver().notifyChange(uri, null);
-
         return returnUri;
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         final SQLiteDatabase db = mMoviesDBHelper.getWritableDatabase();
-
         int match = sUriMatcher.match(uri);
-
-        //rows deleted
         int rowsDeleted;
 
         switch (match) {
             case MOVIES_WITH_ID:
-                // Get the task ID from the URI path
                 String id = uri.getPathSegments().get(1);
-
-                // Use selections/selectionArgs to filter for this ID
                 rowsDeleted = db.delete(MoviesContract.MoviesEntry.TABLE_NAME, "idMovie=?", new String[]{id});
-
                 break;
 
             default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+                throw new UnsupportedOperationException(String.format("Unknown uri: %s", uri));
         }
 
         if (rowsDeleted != 0) {
-            // A task was deleted, set notification
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
-        // Return the number of tasks deleted
         return rowsDeleted;
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        //Keep track of if an update occurs
         int tasksUpdated;
-
-        // match code
         int match = sUriMatcher.match(uri);
 
         switch (match) {
             case MOVIES_WITH_ID:
-                //update a single task by getting the id
                 String id = uri.getPathSegments().get(1);
-                //using selections
                 tasksUpdated = mMoviesDBHelper.getWritableDatabase().update(MoviesContract.MoviesEntry.TABLE_NAME, values, "idMovie=?", new String[]{id});
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+                throw new UnsupportedOperationException(String.format("Unknown uri: %s", uri));
         }
 
         if (tasksUpdated != 0) {
-            //set notifications if a task was updated
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
-        // return number of tasks updated
         return tasksUpdated;
+    }
+
+    private static UriMatcher buildUriMatcher() {
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_MOVIES, MOVIES);
+        uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_MOVIES + "/#", MOVIES_WITH_ID);
+
+        return uriMatcher;
     }
 }

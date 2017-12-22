@@ -11,18 +11,25 @@ public class Reviews implements Parcelable {
     private String author;
     private String content;
 
-    public Reviews(String author, String content) {
-        this.author = author;
-        this.content = content;
-    }
-
     public Reviews() {
     }
 
-    public Reviews(Parcel in) {
+    private Reviews(Parcel in) {
         this.author = in.readString();
         this.content = in.readString();
     }
+
+    public static final Creator<Reviews> CREATOR = new Creator<Reviews>() {
+        @Override
+        public Reviews createFromParcel(Parcel in) {
+            return new Reviews(in);
+        }
+
+        @Override
+        public Reviews[] newArray(int size) {
+            return new Reviews[size];
+        }
+    };
 
     public String getAuthor() {
         return author;
@@ -52,19 +59,4 @@ public class Reviews implements Parcelable {
         dest.writeString(content);
     }
 
-    public static final Parcelable.Creator<Reviews> CREATOR = new Parcelable.Creator<Reviews>() {
-
-        // This simply calls our new constructor (typically private) and
-        // passes along the unmarshalled `Parcel`, and then returns the new object!
-        @Override
-        public Reviews createFromParcel(Parcel in) {
-            return new Reviews(in);
-        }
-
-        // We just need to copy this and change the type to match our class.
-        @Override
-        public Reviews[] newArray(int size) {
-            return new Reviews[size];
-        }
-    };
 }

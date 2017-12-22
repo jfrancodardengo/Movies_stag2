@@ -10,18 +10,19 @@
     <string name="retry">TENTAR NOVAMENTE</string>
 
     <!--Usado em item_article.xml-->
-    <string name="header_review">Reviews</string>
 
     <!--Usar em detail_fragment.xml-->
     <string name="titulo">Título</string>
     <string name="avaliacao">Avaliação</string>
     <string name="data">Data</string>
-    <string name="sinopse">Sinopse</string>
 
     <string name="overview">sobre</string>
     <string name="trailers">trailers</string>
     <string name="reviews">resenhas</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="imagem_de_miniatura_filme">Imagem de miniatura filme</string>
+    <string name="_10">/10</string>
+    <string name="video_trailer">Video trailer</string>
+    <string name="imagem_de_fundo">Imagem de fundo</string>
 </resources>
